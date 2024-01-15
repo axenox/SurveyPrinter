@@ -1,0 +1,22 @@
+{
+    "name": "axenox/surveyprinter",
+    "require": {
+        "exface/core": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "\\axenox\\SurveyPrinter\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Config/",
+            "/Translations/",
+            "/Model/"
+        ]
+    },
+    "extra": {
+        "app": {
+            "app_uid": "0x11eeb4cb8174d628b4cb025041000001",
+            "app_alias": "axenox.SurveyPrinter"
+        }
+    }
+}
