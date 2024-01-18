@@ -7,6 +7,7 @@ use axenox\SurveyPrinter\Interfaces\RendererResolverInterface;
 use exface\Core\Exceptions\InvalidArgumentException;
 use exface\Core\Exceptions\Configuration\ConfigOptionNotFoundError;
 use exface\Core\Facades\AbstractHttpFacade\NotFoundRenderer;
+use exface\Core\CommonLogic\Workbench;
 
 /**
  * The SurveyRenderer takes a SurveyJs and tries to resolve all it's elements. He needs an array of all renderers by type
@@ -16,10 +17,12 @@ use exface\Core\Facades\AbstractHttpFacade\NotFoundRenderer;
  */
 class SurveyRenderer implements RendererInterface,  RendererResolverInterface
 {
+	protected Workbench $workbench;
 	protected array $renderersByType;
 	
-	public function __construct(array $renderersByType)
+	public function __construct(Workbench $workbench, array $renderersByType)
 	{		
+		$this->workbench = $workbench;
 		$this->renderersByType = $renderersByType;
 	}
 	
@@ -56,9 +59,9 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
     	}
     	
     	if (array_key_exists($jsonPart['type'], $this->renderersByType) === false){
-    		$this->getWorkbench()->getLogger()->logException(new ConfigOptionNotFoundError(
-    			$this->getWorkbench()
-	    			->getApp(SurveyAsHTML::FOLDER_NAME_APP . '.' . SurveyAsHTML::FOLDER_NAME_SUBAPP)
+    		$this->workbench->getLogger()->logException(new ConfigOptionNotFoundError(
+    			$this->workbench
+	    			->getApp(SurveyAsHTML::FOLDER_NAME_APPALIAS)
 	    			->getConfig(),
     			'Unkown render target type: ' . $jsonPart['type']));
     		return new InvisibleRenderer($this); // TODO: delete when not found handler implemented

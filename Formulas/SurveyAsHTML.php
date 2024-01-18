@@ -65,7 +65,7 @@ class SurveyAsHTML extends Formula
     		return 'Given JSON cannot be resolved. Please validate format.';
     	}
     	
-    	return (new SurveyRenderer($renderersByType))->render($surveyJson, $awnserJson, $this->getStyleCssPath($design));
+    	return (new SurveyRenderer($this->getWorkbench(), $renderersByType))->render($surveyJson, $awnserJson, $this->getStyleCssPath($design));
     }
     
     /**
