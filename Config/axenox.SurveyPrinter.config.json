@@ -1,0 +1,10 @@
+{
+	"RENDERERS_BY_TYPE": {
+		 "none": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\PageRenderer",	
+		 "text": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\TextRenderer",	
+		 "boolean": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\BooleanRenderer",	
+		 "dropdown": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\ChoicesRenderer",
+		 "checkbox": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\ChoicesRenderer",
+		 "panel": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\PanelRenderer"
+	}
+}
