@@ -26,12 +26,13 @@ class BooleanRenderer extends QuestionRenderer
 			return '';
 		}
 		
-    	$awnser = $awnserJson[$jsonPart['name']];
+		$awnser = $awnserJson[$jsonPart['name']];
+		$label = $jsonPart['title'] ?? $jsonPart['name'];
     	$awnser = $awnser === true ? 'Ja' : 'Nein';
 		return <<<HTML
 		
 	<div class='form-text'>
-		<label>{$jsonPart['title']}</label>
+		<label>{$label}</label>
 		<span class='form-value'>{$awnser}</span>
 		<span class='form-description'>{$jsonPart['description']}</label>
 	</div>

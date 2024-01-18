@@ -72,10 +72,12 @@ class ChoicesRenderer extends QuestionRenderer
     		}
     		
     	}
+    	
+    	$label = $jsonPart['title'] ?? $jsonPart['name'];
     	return <<<HTML
     	
 	<div class='form-text'>
-		<label>{$jsonPart['title']}</label>
+		<label>{$label}</label>
 		<span class='form-value'>{$values}</span>
 		<span class='form-description'>{$jsonPart['description']}</label>
 	</div>

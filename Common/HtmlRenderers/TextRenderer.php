@@ -25,10 +25,12 @@ class TextRenderer extends QuestionRenderer
     		return '';
     	}
     	
+    	$label = $jsonPart['title'] ?? $jsonPart['name'];
+    	
     	return <<<HTML
     	
 	<div class='form-text'>
-		<label>{$jsonPart['title']}</label>
+		<label>{$label}</label>
 		<span class='form-value'>{$awnserJson[$jsonPart['name']]}</span>
 		<span class='form-description'>{$jsonPart['description']}</label>
 	</div>
