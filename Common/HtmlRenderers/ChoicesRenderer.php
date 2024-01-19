@@ -4,7 +4,7 @@ namespace axenox\SurveyPrinter\Common\HtmlRenderers;
 use axenox\SurveyPrinter\Interfaces\RendererInterface;
 
 /**
- * The ChoicesRenderer should be used to render SurveyJs elements with a ´choices´ arra.
+ * The ChoicesRenderer should be used to render SurveyJs elements with a ´choices´ array.
  * 
  * The configuration differs for both SurveyJs and awnser json.
  * If the SurveyJs only contains values and no corresponding text (like a title) the json will look like this:

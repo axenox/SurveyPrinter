@@ -14,14 +14,15 @@ class PanelRenderer extends AbstractRenderer
      */
 	public function render(array $jsonPart, array $awnserJson) : string
     {        
-    	$renderedElements =$this->renderElements($jsonPart, $awnserJson);
-    	if ( $renderedElements === ''){
+    	$renderedElements = $this->renderElements($jsonPart, $awnserJson);
+    	if ($renderedElements === ''){
     		return '';
     	}
     	
         return <<<HTML
         
 	<div class='form-panel'>
+		<label class='form-panelTitle'>{$jsonPart['title']}</label>
 		{$renderedElements}
 	</div>
 HTML;
@@ -35,13 +36,13 @@ HTML;
      */
     public function renderElements(array $jsonPart, array $awnserJson) : string
     {
-    	$html = '';
     	foreach ($jsonPart['elements'] as $el) {
     		// element is an array
     		if (is_numeric($el)){
     			foreach ($el as $jsonElement) {
     				$html .= $this->resolver->findRenderer($jsonElement)->render($jsonElement, $awnserJson);
     			}
+    			continue;
     		}
     		// skip expressions in export
     		if (array_key_exists('type', $el) && $el['type'] === 'expression') {
@@ -50,6 +51,7 @@ HTML;
     			$html .= $this->resolver->findRenderer($el)->render($el, $awnserJson);
     		}
     	}
+    	
     	return $html;
     }
 

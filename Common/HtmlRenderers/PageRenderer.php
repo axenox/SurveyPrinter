@@ -5,7 +5,15 @@ class PageRenderer extends AbstractRenderer
 {	
 	/**
 	 * The PageRenderer is a strict renderer for pages of a SurveyJs.
-	 * The SurveyJs has to have an array ´pages´ that contains all related elements.
+	 * The SurveyJs has to have an array ´pages´ and these have to to have ojects with ´elements´ that contains all related elements.
+	 * SurveyJs for all pages:
+	 * "title": "Form", // optional
+	 * "pages": [ .. ]
+	 * 
+	 * SurveyJs for one page:
+	 * "name": "page1",
+	 * "title": "Page" // optional 
+	 * "elements": [ ... ]
 	 * 
 	 * The awnser json will be contributed to all inner elements.
 	 * 
@@ -20,6 +28,7 @@ class PageRenderer extends AbstractRenderer
 		<label class='form-pageTitle'>{$jsonPart['title']}</label>
 		<label class='form-description'>{$jsonPart['description']}</label>
 		{$this->renderElements($jsonPart, $awnserJson)}
+		{$this->createFooter($jsonPart)}
 	</div>
 HTML;
     }
@@ -30,22 +39,51 @@ HTML;
      * @return string
      */
     public function renderElements(array $jsonPart, array $awnserJson) : string
-    {
-        $html = '';
-        foreach ($jsonPart['elements'] as $el) {
+    {        
+    	$html = '';
+        switch(true)
+        {
+        	case array_key_exists('pages', $jsonPart):
+        		$elements = $jsonPart['pages'];
+        		break;
+        	case array_key_exists('elements', $jsonPart):
+        		$elements = $jsonPart['elements'];
+        		break;
+        }
+        
+        foreach ($elements as $el) {
         	// element is an array
         	if (is_numeric($el)){        		
         		foreach ($el as $jsonElement) {
-        			$html .= $this->resolver->findRenderer($jsonElement)->render($jsonElement, $awnserJson);
+        			$htmlElement = $this->resolver->findRenderer($jsonElement)->render($jsonElement, $awnserJson);
+        			$html .= $htmlElement;
         		}
+        		continue;
         	}
         	// skip expressions in export
         	if (array_key_exists('type', $el) && $el['type'] === 'expression') {
         		continue;
         	} else {
-        		$html .= $this->resolver->findRenderer($el)->render($el, $awnserJson);
+        		$htmlElement = $this->resolver->findRenderer($el)->render($el, $awnserJson);
+        		$html .= $htmlElement;
         	}
         }
+        
         return $html;
-    }    
+    }
+    
+    protected function createFooter(array $jsonPart) :string
+    {
+    	// Only one Footer for all pages
+    	if (array_key_exists('pages', $jsonPart) === false){
+    		return '';
+    	}
+    	
+    	return <<<HTML
+    	
+	<footer>
+		Das Formular enthält nur ausgefüllte Inhalte.
+	</footer>
+HTML;
+    }
 }
