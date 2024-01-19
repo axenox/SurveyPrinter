@@ -53,6 +53,7 @@
   border: 2px solid #f1f5f8;
   margin: 40px auto;
   border-radius: .25rem;
+  width: 100%;
 }
 
 .form-page th {

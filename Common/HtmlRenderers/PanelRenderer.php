@@ -36,13 +36,13 @@ HTML;
      */
     public function renderElements(array $jsonPart, array $awnserJson) : string
     {
-    	$html = '';
     	foreach ($jsonPart['elements'] as $el) {
     		// element is an array
     		if (is_numeric($el)){
     			foreach ($el as $jsonElement) {
     				$html .= $this->resolver->findRenderer($jsonElement)->render($jsonElement, $awnserJson);
     			}
+    			continue;
     		}
     		// skip expressions in export
     		if (array_key_exists('type', $el) && $el['type'] === 'expression') {
@@ -51,6 +51,7 @@ HTML;
     			$html .= $this->resolver->findRenderer($el)->render($el, $awnserJson);
     		}
     	}
+    	
     	return $html;
     }
 

@@ -5,6 +5,9 @@
 		 "boolean": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\BooleanRenderer",	
 		 "dropdown": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\ChoicesRenderer",
 		 "checkbox": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\ChoicesRenderer",
-		 "panel": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\PanelRenderer"
+		 "panel": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\PanelRenderer",
+		 "paneldynamic": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\DynamicPanelRenderer",
+		 "multipletext": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\MultipleTextRenderer",
+		 "matrixdynamic": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\DynamicMatrixRenderer"
 	}
 }

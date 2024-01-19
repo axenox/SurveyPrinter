@@ -48,6 +48,7 @@ HTML;
         		break;
         	case array_key_exists('elements', $jsonPart):
         		$elements = $jsonPart['elements'];
+        		break;
         }
         
         foreach ($elements as $el) {
