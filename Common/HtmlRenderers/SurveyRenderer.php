@@ -6,7 +6,6 @@ use axenox\SurveyPrinter\Interfaces\RendererInterface;
 use axenox\SurveyPrinter\Interfaces\RendererResolverInterface;
 use exface\Core\Exceptions\InvalidArgumentException;
 use exface\Core\Exceptions\Configuration\ConfigOptionNotFoundError;
-use exface\Core\Facades\AbstractHttpFacade\NotFoundRenderer;
 use exface\Core\CommonLogic\Workbench;
 
 /**
@@ -34,7 +33,7 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
 	 */
     public function render(array $surveyJson, array $awnserJson, string $cssPath = null): string
     {
-    	return $this->createStyleHeader($cssPath) . $this->renderElements($surveyJson, $awnserJson) . $this->createFooter();
+    	return $this->createStyleHeader($cssPath) . $this->renderElements($surveyJson, $awnserJson);
     }
     
     /**
@@ -44,11 +43,7 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
      */
     public function renderElements(array $json, $awnserJson) : string
     {
-        $html = '';
-        foreach ($json['pages'] as $el) {
-        	$html .= $this->findRenderer($el)->render($el, $awnserJson);
-        }
-        return $html;
+        return $this->findRenderer($json)->render($json, $awnserJson);
     }
         
     public function findRenderer(array $jsonPart): RendererInterface
@@ -83,17 +78,6 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
 	<style>
 		{$css}
 	</style>
-HTML;
-    }
-    
-    protected function createFooter() :string 
-    {
-    	
-    	return <<<HTML
-    	
-	<footer>
-		Das Formular enthält nur ausgefüllte Inhalte.
-	</footer>
 HTML;
     }
 

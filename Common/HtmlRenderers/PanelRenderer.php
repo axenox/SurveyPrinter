@@ -14,14 +14,15 @@ class PanelRenderer extends AbstractRenderer
      */
 	public function render(array $jsonPart, array $awnserJson) : string
     {        
-    	$renderedElements =$this->renderElements($jsonPart, $awnserJson);
-    	if ( $renderedElements === ''){
+    	$renderedElements = $this->renderElements($jsonPart, $awnserJson);
+    	if ($renderedElements === ''){
     		return '';
     	}
     	
         return <<<HTML
         
 	<div class='form-panel'>
+		<label class='form-panelTitle'>{$jsonPart['title']}</label>
 		{$renderedElements}
 	</div>
 HTML;
