@@ -1,68 +1,61 @@
-.form-page{
-  padding: 5px;
-}
-  
-.form-pageTitle {
- padding: 5px 20px 20px 0;
-}
-
 .form-panel {
-  margin: 10px 0;
+	margin: 10px 0;
 }
 
 .form-text {
-  padding: 0 6px;
-  vertical-align: middle;
-  border: 0.5pt dotted black;
+	vertical-align: middle;
+	border: 0.5pt dotted black;
 }
 
 .form-text+.form-text {
-  border-top: none;
+	border-top: none;
 }
 
 .form-text label {
-  padding: 0 7px;
-  width: 50%;
-  display: inline-block;
-  height: auto;
+  	padding: 2px 3px;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: normal;
+	width: 50%;
+	display: inline-block;
+	height: auto;
 }
 
 .form-value {
-  padding: 0 7px;
-  margin-left: -7px;
-  width: 40%;
-  display: inline-block;
+  	padding: 2px 3px;
+    word-break: break-all;
+    word-wrap: break-word;
+    white-space: normal;
+	display: inline-block;
 }
 
 .form-page table {
-  border-collapse: separate;
-  border-spacing: 0;
-  border: 1px solid #000;
-  margin: 40px auto;
-  width: 100%;
+	border-collapse: separate;
+	border-spacing: 0;
+	border: 1px solid #000;
+	margin: 40px auto;
+	width: 100%;
 }
 
 .form-page th {
-  padding: 2px 7px;
-  border-bottom: 3px solid #ddd;
+	padding: 2px 7px;
+	border-bottom: 3px solid #ddd;
 }
 
 .form-page tbody td {
-  padding: 2px 7px;
-  border-bottom: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
 }
 
 .form-description {
-  display: block;
-  margin-left: 7px;
+	display: block;
 }
 
 .form-items span {
-  padding: .5em
+	padding: .5em
 }
 
 .form-footer {
-  padding: 0 10px;
-  margin-top: 8px;
-  width: 100%;
+    font-style: italic;
+	margin-top: 8px;
+	width: 100%;
 }
