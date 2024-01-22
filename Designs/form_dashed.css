@@ -4,31 +4,27 @@
   
 .form-pageTitle {
  padding: 5px 20px 20px 0;
- text-align: left;
-}
-
-.form-panelTitle {
- text-align: left;
 }
 
 .form-panel {
-  border: 1px solid #000;
-  padding: 5px 10px;
   margin: 10px 0;
 }
 
 .form-text {
   padding: 0 6px;
   vertical-align: middle;
-  border-right: 0.5pt dotted black;
-  border-bottom: 0.5pt dotted black;
+  border: 0.5pt dotted black;
+}
+
+.form-text+.form-text {
+  border-top: none;
 }
 
 .form-text label {
   padding: 0 7px;
-  text-align: left;
   width: 50%;
   display: inline-block;
+  height: auto;
 }
 
 .form-value {
@@ -39,7 +35,6 @@
 }
 
 .form-page table {
-  text-align: left;
   border-collapse: separate;
   border-spacing: 0;
   border: 1px solid #000;
