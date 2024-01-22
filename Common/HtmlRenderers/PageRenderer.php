@@ -25,8 +25,8 @@ class PageRenderer extends AbstractRenderer
         return <<<HTML
         	
 	<div class='form-page'>
-		<label class='form-pageTitle'>{$jsonPart['title']}</label>
-		<label class='form-description'>{$jsonPart['description']}</label>
+		<h3 class='form-pageTitle'>{$jsonPart['title']}</h3>
+		<div class='form-description'>{$jsonPart['description']}</div>
 		{$this->renderElements($jsonPart, $awnserJson)}
 		{$this->createFooter($jsonPart)}
 	</div>
@@ -81,9 +81,9 @@ HTML;
     	
     	return <<<HTML
     	
-	<footer>
+	<div class="form-footer">
 		Das Formular enthält nur ausgefüllte Inhalte.
-	</footer>
+	</div>
 HTML;
     }
 }
