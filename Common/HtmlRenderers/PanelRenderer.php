@@ -13,7 +13,8 @@ class PanelRenderer extends AbstractRenderer
      * @see \axenox\SurveyPrinter\Interfaces\RendererInterface::render()
      */
 	public function render(array $jsonPart, array $awnserJson) : string
-    {        
+	{
+		$attributes = $this->renderAttributesToRender($jsonPart);
     	$renderedElements = $this->renderElements($jsonPart, $awnserJson);
     	if ($renderedElements === ''){
     		return '';
@@ -22,7 +23,7 @@ class PanelRenderer extends AbstractRenderer
         return <<<HTML
         
 	<div class='form-panel'>
-		<label class='form-panelTitle'>{$jsonPart['title']}</label>
+		{$attributes}
 		{$renderedElements}
 	</div>
 HTML;
@@ -36,6 +37,8 @@ HTML;
      */
     public function renderElements(array $jsonPart, array $awnserJson) : string
     {
+    	//elements should be on the next level
+    	$this->resolver->increaseLevel();
     	foreach ($jsonPart['elements'] as $el) {
     		// element is an array
     		if (is_numeric($el)){
@@ -51,6 +54,7 @@ HTML;
     			$html .= $this->resolver->findRenderer($el)->render($el, $awnserJson);
     		}
     	}
+    	$this->resolver->decreaseLevel();
     	
     	return $html;
     }

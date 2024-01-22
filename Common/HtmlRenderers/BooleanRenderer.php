@@ -32,7 +32,6 @@ class BooleanRenderer extends QuestionRenderer
 		}
 		
 		$awnser = $awnserJson[$jsonPart['name']];
-		$label = $jsonPart['title'] ?? $jsonPart['name'];
 		if ($awnser === true) {
 			$awnser = array_key_exists('labelTrue', $jsonPart) ? $jsonPart['labelTrue'] : "Ja";
 		}
@@ -41,15 +40,8 @@ class BooleanRenderer extends QuestionRenderer
 		}
 		else {
 			return '';
-		}
+		}		
 		
-		return <<<HTML
-		
-	<div class='form-text'>
-		<label>{$label}</label>
-		<span class='form-value'>{$awnser}</span>
-		<span class='form-description'>{$jsonPart['description']}</label>
-	</div>
-HTML;
+		return $this->renderQuestion($jsonPart, $awnser);
     }
 }
