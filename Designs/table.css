@@ -6,9 +6,38 @@
   padding: 5px;
   display: grid;
 }
+	
+	.form-page table {
+	  page-break-inside: avoid;
+	  text-align: center;
+	  border-collapse: separate;
+	  border-spacing: 0;
+	  border: 1px solid #000;
+	  margin: 40px auto;
+	  width: 100%;
+	}
+
+	.form-page thead > tr {
+	  page-break-after: avoid;
+	}
+	
+	.form-page th {
+	  text-align: center;
+	  padding: 2px 7px;
+	  border-bottom: 3px solid #ddd;
+	}
+	
+	.form-page .form-row-title-entry {
+	  text-align: left;
+	}
+	
+	.form-page tbody td {
+	  text-align: center;
+	  padding: 2px 7px;
+	  border-bottom: 1px solid #ddd;
+	}
   
 .form-page-title {
-  padding: 5px 20px 20px 0;
   text-align: left;
 }
 
@@ -25,65 +54,27 @@
 }
 
 .form-question {
-  display: flex;
-  flex-direction: row;
   padding: 2px 6px;
   vertical-align: middle;
-  border-right: 0.5pt dotted black;
-  border-bottom: 0.5pt dotted black;
+  text-align: left  !important;
+  border-right: 0.5pt dotted black !important;
+  border-bottom: 0.5pt dotted black !important;
+  margin: 0 !important;
+  border: 0 !important;
 }
-
-.form-question label {
-  width: 50%;
-  padding: 3px 0;
-  vertical-align: middle;
-  white-space: normal;
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-content: space-around;
-  align-items: center;
-  align-items: center;
-  justify-content: flex-start;
-}
+	
+	.form-question td {
+	  text-align: left !important;
+	  width: 50%;
+	  padding: 3px 2px !important;
+	  vertical-align: middle;
+	  white-space: normal;
+	}
 
 .form-value {
   width: 40%;
+  vertical-align: middle ;
   white-space: normal;
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-content: space-around;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.form-page table {
-  page-break-inside: avoid;
-  text-align: center;
-  border-collapse: separate;
-  border-spacing: 0;
-  border: 1px solid #000;
-  margin: 40px auto;
-  width: 100%;
-}
-
-.form-page thead > tr {
-  page-break-after: avoid;
-}
-
-.form-page th {
-  text-align: center;
-  padding: 2px 7px;
-  border-bottom: 3px solid #ddd;
-}
-
-.form-page .form-row-title-entry {
-  text-align: left;
-}
-
-.form-page tbody td {
-  text-align: center;
-  padding: 2px 7px;
-  border-bottom: 1px solid #ddd;
 }
 
 .form-description {
