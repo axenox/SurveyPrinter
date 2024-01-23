@@ -24,16 +24,7 @@ class TextRenderer extends QuestionRenderer
     	if ($this->isPartOfAwnserJson($jsonPart, $awnserJson) === false) {
     		return '';
     	}
-    	
-    	$label = $jsonPart['title'] ?? $jsonPart['name'];
-    	
-    	return <<<HTML
-    	
-	<div class='form-text'>
-		<label>{$label}</label>
-		<span class='form-value'>{$awnserJson[$jsonPart['name']]}</span>
-		<span class='form-description'>{$jsonPart['description']}</label>
-	</div>
-HTML;
+    		
+    	return $this->renderQuestion($jsonPart, $awnserJson[$jsonPart['name']]);
     }
 }

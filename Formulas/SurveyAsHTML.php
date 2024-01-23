@@ -47,7 +47,7 @@ class SurveyAsHTML extends Formula
      * {@inheritDoc}
      * @see \exface\Core\CommonLogic\Model\Formula::run()
      */
-	public function run(string $surveyJson = null, string $awnserJson = null, string $design = 'form_dashed') : string
+	public function run(string $surveyJson = null, string $awnserJson = null, string $design = 'table') : string
     {
     	$renderersByType = $this->getWorkbench()->getApp(self::FOLDER_NAME_APPALIAS)
     		->getConfig()->getOption('RENDERERS_BY_TYPE')->toArray();

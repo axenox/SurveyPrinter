@@ -6,10 +6,9 @@ use axenox\SurveyPrinter\Interfaces\RendererInterface;
 class NotFoundRenderer implements RendererInterface
 {	
     /**
-     * This renderer is used to print a hint on the HTML that explains that the format could not be rendered.
+     * This renderer is used to print a hint on the HTML that explains that the format could not be rendered. 
      * 
-     * {@inheritDoc}
-     * @see \axenox\SurveyPrinter\Interfaces\RendererInterface::render()
+	 * @author miriam.seitz
      */
     public function render(array $jsonPart, array $awnserJson): string
     {

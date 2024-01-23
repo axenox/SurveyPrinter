@@ -8,6 +8,8 @@
 		 "panel": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\PanelRenderer",
 		 "paneldynamic": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\DynamicPanelRenderer",
 		 "multipletext": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\MultipleTextRenderer",
-		 "matrixdynamic": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\DynamicMatrixRenderer"
+		 "matrixdynamic": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\DynamicMatrixRenderer",
+		 "matrix": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\MatrixRenderer",
+		 "matrixdropdown": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\MatrixRenderer"
 	}
 }

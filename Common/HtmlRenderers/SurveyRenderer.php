@@ -18,6 +18,7 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
 {
 	protected Workbench $workbench;
 	protected array $renderersByType;
+	private  int $level = 1;
 	
 	public function __construct(Workbench $workbench, array $renderersByType)
 	{		
@@ -79,6 +80,29 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
 		{$css}
 	</style>
 HTML;
+    }
+    
+    public function getLevel() : int 
+    {
+    	return $this->level;
+    }
+    
+    public function increaseLevel() : void
+    {
+    	if ($this->level === 6){
+    		return;
+    	}
+    	
+    	$this->level++;
+    }
+    
+    public function decreaseLevel() : void
+    {
+    	if ($this->level === 0){
+    		$this->level;
+    	}
+    	
+    	$this->level--;
     }
 
 }

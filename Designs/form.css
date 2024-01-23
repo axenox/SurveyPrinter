@@ -3,14 +3,14 @@
   font-family: sans-serif;
 }
   
-.form-pageTitle {
+.form-page-title {
  padding: 5px 20px 20px 0;
  text-align: left;
  color: lightslategrey;
  font-size: 35px;
 }
 
-.form-panelTitle {
+.form-panel-title {
  text-align: left;
  color: lightslategrey;
  font-size: 28px;

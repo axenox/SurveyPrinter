@@ -50,16 +50,16 @@ use axenox\SurveyPrinter\Interfaces\RendererInterface;
  * (!) The cellType does not matter since the awnserJson will always have the value of the cell by name.
  * (!) The columnNames in the dynamic matrix will be equal with mutliple rows but seperate objects in the array.
  *
- * {@inheritDoc}
- * @see \axenox\SurveyPrinter\Interfaces\RendererInterface::render()
+ * @author miriam.seitz
  */
-class DynamicMatrixRenderer implements RendererInterface
+class DynamicMatrixRenderer extends  AbstractRenderer
 {	
 	public function render(array $jsonPart, array $awnserJson) : string
-    {        
+	{
+		$attributes = $this->renderAttributesToRender($jsonPart);
     	foreach ($jsonPart['columns'] as $column)
     	{
-    		$tableHeader .= '<th>' . $column['name'] . '</th>';
+    		$tableHeader .= '<th>' . ($column['title'] ?? $column['name'])  . '</th>';
     	}
     	
     	
@@ -73,8 +73,9 @@ class DynamicMatrixRenderer implements RendererInterface
     	
         return <<<HTML
         
-	<div>
-		<table>
+	<div style='page-break-inside: avoid;'>
+		{$attributes}
+		<table style='page-break-inside: avoid;'>
 			<thead>
 				<tr>
 					{$tableHeader}

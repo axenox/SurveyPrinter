@@ -22,4 +22,38 @@ abstract class AbstractRenderer implements RendererInterface
 	{
 		$this->resolver = $resolver;
 	}
+	
+	protected function renderAttributesToRender(array $jsonPart) : string
+	{
+		$html = '';
+		if ($jsonPart['title'] !== null){
+			$html .= $this->createHeading($jsonPart);
+		}
+		if ($jsonPart['description'] !== null){
+			$html .= <<<HTML
+    		<div class='form-description'>{$jsonPart['description']}</div>
+ HTML;
+		}
+		
+		return $html;
+	}
+	
+	protected function createHeading(array $jsonPart) : string
+	{
+		if ($jsonPart['showTitle'] === false){
+			return '';
+		}
+		
+		switch (true){
+			case $jsonPart['type'] === 'panel':
+			case $jsonPart['type'] === 'paneldynamic':
+				$cssClass = 'form-panel-title';
+				break;
+			default:
+				$cssClass = 'form-page-title';
+		}
+		return <<<HTML
+    		<h{$this->resolver->getLevel()} class='{$cssClass}' style='page-break-after: avoid;'>{$jsonPart['title']}</h{$this->resolver->getLevel()}>
+ HTML;
+	}
 }

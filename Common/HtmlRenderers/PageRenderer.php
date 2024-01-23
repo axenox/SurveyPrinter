@@ -22,12 +22,24 @@ class PageRenderer extends AbstractRenderer
 	 */
     public function render(array $jsonPart, array $awnserJson): string
     {    	
+    	switch(true)
+    	{
+    		case array_key_exists('pages', $jsonPart):
+    			$cssClass = 'form';
+    			$elements = $jsonPart['pages'];
+    			break;
+    		case array_key_exists('elements', $jsonPart):
+    			$cssClass = 'form-page';
+    			$elements = $jsonPart['elements'];
+    			break;
+    	}
+    	
+    	$attributes = $this->renderAttributesToRender($jsonPart);
         return <<<HTML
         	
-	<div class='form-page'>
-		<h3 class='form-pageTitle'>{$jsonPart['title']}</h3>
-		<div class='form-description'>{$jsonPart['description']}</div>
-		{$this->renderElements($jsonPart, $awnserJson)}
+	<div class='{$cssClass}'>
+		{$attributes}
+		{$this->renderElements($elements, $awnserJson)}
 		{$this->createFooter($jsonPart)}
 	</div>
 HTML;
@@ -38,19 +50,12 @@ HTML;
      * @param array $jsonPart
      * @return string
      */
-    public function renderElements(array $jsonPart, array $awnserJson) : string
+    public function renderElements(array $elements, array $awnserJson) : string
     {        
     	$html = '';
-        switch(true)
-        {
-        	case array_key_exists('pages', $jsonPart):
-        		$elements = $jsonPart['pages'];
-        		break;
-        	case array_key_exists('elements', $jsonPart):
-        		$elements = $jsonPart['elements'];
-        		break;
-        }
         
+        //elements should be on the next level
+        $this->resolver->increaseLevel();
         foreach ($elements as $el) {
         	// element is an array
         	if (is_numeric($el)){        		
@@ -68,6 +73,7 @@ HTML;
         		$html .= $htmlElement;
         	}
         }
+        $this->resolver->decreaseLevel();
         
         return $html;
     }

@@ -8,7 +8,7 @@ class DynamicPanelRenderer extends AbstractRenderer
 	 * The SurveyJs has to have an array ´templateElements´ that contains all related elements.
 	 * 
 	 * The awnser json for this panel is related to the panel with an inner layer to pass for the other elements.
-	 * 	"dynamicPanelName": [
+	 * ´"dynamicPanelName": [
 	 *	{
 	 *		"elementName": "Text",
 	 *		"elementName2": true,
@@ -17,15 +17,14 @@ class DynamicPanelRenderer extends AbstractRenderer
 	 *		"elementName": "Text2",
 	 *		"elementName2": false,
 	 *	}
-	 * ]
+	 * ]´
 	 * (!) The elementNames in the dynamic panel will be equal but seperate objects in the array.
 	 * 
-     * {@inheritDoc}
-     * @see \axenox\SurveyPrinter\Interfaces\RendererInterface::render()
+ 	 * @author miriam.seitz
      */
 	public function render(array $jsonPart, array $awnserJson) : string
-    {
-    	
+    {    	
+    	$attributes = $this->renderAttributesToRender($jsonPart);
     	$renderedElements =$this->renderElements($jsonPart, $awnserJson[$jsonPart['name']]);
     	if ($renderedElements === ''){
     		return '';
@@ -34,7 +33,7 @@ class DynamicPanelRenderer extends AbstractRenderer
         return <<<HTML
         
 	<div class='form-panel'>
-		<label class='form-panelTitle'>{$jsonPart['title']}</label>
+		{$attributes}
 		{$renderedElements}
 	</div>
 HTML;
@@ -47,7 +46,9 @@ HTML;
      * @return string
      */
     public function renderElements(array $jsonPart, array $awnserJson) : string
-    { 
+    {
+    	//elements should be on the next level
+    	$this->resolver->increaseLevel();
     	// muiltiple panels with awnsers
 	    foreach($awnserJson as  $entry) {
 			foreach ($jsonPart['templateElements'] as $element) {
@@ -68,6 +69,8 @@ HTML;
 				}
 			}
 	    }
+	    $this->resolver->decreaseLevel();
+	    
     	return $html;
     }    
 }
