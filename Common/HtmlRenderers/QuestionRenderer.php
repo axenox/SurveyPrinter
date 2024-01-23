@@ -26,7 +26,7 @@ abstract class QuestionRenderer implements RendererInterface
     	}
     	
     	return <<<HTML
-    	<div class='form-description'>{$jsonPart['description']}</div>
+    	<td class='form-description'>{$jsonPart['description']}</td>
 HTML;
     }
     	
@@ -43,11 +43,13 @@ HTML;
     	
     	return <<<HTML
     		
-	<div class='form-question{$additionalCssClass}'>
-		<label>{$label}</label>
-		<span class='form-value'>{$renderedValues}</span>
-		{$description}
-	</div>
+	<table class='form-question{$additionalCssClass}'>
+		<tr>
+			<td>{$label}</td>
+			<td class='form-value'>{$renderedValues}</td>
+			{$description}
+		</tr>
+	</table>
 HTML;
     }
 }
