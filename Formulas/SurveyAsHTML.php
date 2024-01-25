@@ -47,7 +47,7 @@ class SurveyAsHTML extends Formula
      * {@inheritDoc}
      * @see \exface\Core\CommonLogic\Model\Formula::run()
      */
-	public function run(string $surveyJson = null, string $awnserJson = null, string $design = 'table') : string
+	public function run(string $surveyJson = null, string $awnserJson = null, string $design = 'table', int $headingLevel = 3) : string
     {
     	$renderersByType = $this->getWorkbench()->getApp(self::FOLDER_NAME_APPALIAS)
     		->getConfig()->getOption('RENDERERS_BY_TYPE')->toArray();
@@ -65,7 +65,8 @@ class SurveyAsHTML extends Formula
     		return 'Given JSON cannot be resolved. Please validate format.';
     	}
     	
-    	return (new SurveyRenderer($this->getWorkbench(), $renderersByType))->render($surveyJson, $awnserJson, $this->getStyleCssPath($design));
+    	return (new SurveyRenderer($this->getWorkbench(), $renderersByType))
+    		->render($surveyJson, $awnserJson, $this->getStyleCssPath($design), $headingLevel);
     }
     
     /**
