@@ -34,7 +34,7 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
 	 * @param int $headingLevel
 	 * @return string
 	 */
-    public function render(array $surveyJson, array $awnserJson, string $cssPath = null, int $headingLevel): string
+    public function render(array $surveyJson, array $awnserJson, string $cssPath = null, int $headingLevel = 1): string
     {
     	$this->headingLevel = $headingLevel;
     	return $this->createStyleHeader($cssPath) . $this->renderElements($surveyJson, $awnserJson);
