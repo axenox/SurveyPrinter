@@ -53,7 +53,8 @@ class SurveyAsHTML extends Formula
     		->getConfig()->getOption('RENDERERS_BY_TYPE')->toArray();
     	
     	if ($awnserJson === null){
-    		return 'The requested Formular has not been filled out yet.';
+            $translator = $this->getWorkbench()->getApp('axenox.SurveyPrinter')->getTranslator();
+    		return $translator->translate('FORM.HAS_NO_CONTENT');
     	}
     	
     	try {
