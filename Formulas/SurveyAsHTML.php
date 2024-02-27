@@ -47,13 +47,14 @@ class SurveyAsHTML extends Formula
      * {@inheritDoc}
      * @see \exface\Core\CommonLogic\Model\Formula::run()
      */
-	public function run(string $surveyJson = null, string $awnserJson = null, string $design = 'form_dashed') : string
+	public function run(string $surveyJson = null, string $awnserJson = null, string $design = 'table', int $headingLevel = 3) : string
     {
     	$renderersByType = $this->getWorkbench()->getApp(self::FOLDER_NAME_APPALIAS)
     		->getConfig()->getOption('RENDERERS_BY_TYPE')->toArray();
     	
     	if ($awnserJson === null){
-    		return 'The requested Formular has not been filled out yet.';
+            $translator = $this->getWorkbench()->getApp('axenox.SurveyPrinter')->getTranslator();
+    		return $translator->translate('FORM.HAS_NO_CONTENT');
     	}
     	
     	try {
@@ -65,7 +66,8 @@ class SurveyAsHTML extends Formula
     		return 'Given JSON cannot be resolved. Please validate format.';
     	}
     	
-    	return (new SurveyRenderer($this->getWorkbench(), $renderersByType))->render($surveyJson, $awnserJson, $this->getStyleCssPath($design));
+    	return (new SurveyRenderer($this->getWorkbench(), $renderersByType))
+    		->render($surveyJson, $awnserJson, $this->getStyleCssPath($design), $headingLevel);
     }
     
     /**

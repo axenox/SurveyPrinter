@@ -18,21 +18,25 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
 {
 	protected Workbench $workbench;
 	protected array $renderersByType;
+	private  int $headingLevel;
 	
 	public function __construct(Workbench $workbench, array $renderersByType)
-	{		
+	{
 		$this->workbench = $workbench;
 		$this->renderersByType = $renderersByType;
 	}
 	
 	/**
-	 * Renders every element of the gives survey JSON into an HTML.
 	 *
-	 * @param array $jsonPart
+	 * @param array $surveyJson
+	 * @param array $awnserJson
+	 * @param string $cssPath
+	 * @param int $headingLevel
 	 * @return string
 	 */
-    public function render(array $surveyJson, array $awnserJson, string $cssPath = null): string
+    public function render(array $surveyJson, array $awnserJson, string $cssPath = null, int $headingLevel = 1): string
     {
+    	$this->headingLevel = $headingLevel;
     	return $this->createStyleHeader($cssPath) . $this->renderElements($surveyJson, $awnserJson);
     }
     
@@ -79,6 +83,29 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
 		{$css}
 	</style>
 HTML;
+    }
+    
+    public function getLevel() : int 
+    {
+    	return $this->headingLevel;
+    }
+    
+    public function increaseLevel() : void
+    {
+    	if ($this->headingLevel === 6){
+    		return;
+    	}
+    	
+    	$this->headingLevel++;
+    }
+    
+    public function decreaseLevel() : void
+    {
+    	if ($this->headingLevel === 0){
+    		return;
+    	}
+    	
+    	$this->headingLevel--;
     }
 
 }

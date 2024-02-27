@@ -16,19 +16,19 @@ use axenox\SurveyPrinter\Interfaces\RendererInterface;
  * 
  * If it does contain a text property the json will look like this:
  * ´"choices": [
-		{
-			"value": "item1",
-			"text": "A"
-		},
-		{
-			"value": "item2",
-			"text": "B"
-		},
-		{
-			"value": "item3",
-			"text": "C"
-		}
-	]´
+ *		{
+ *			"value": "item1",
+ *			"text": "A"
+ *		},
+ *		{
+ *			"value": "item2",
+ *			"text": "B"
+ *		},
+ *		{
+ *			"value": "item3",
+ *			"text": "C"
+ *		}
+ *	]´
  * 
  * In the awnser json will either be one awnser:
  * ´"nameOfQuestion": "item1"´
@@ -69,19 +69,10 @@ class ChoicesRenderer extends QuestionRenderer
     		if ($value !== null){
 	    		$values .= $firstItem ? $value : ', ' . $value;
 	    		$firstItem = false;
-    		}
-    		
+    		}    		
     	}
     	
-    	$label = $jsonPart['title'] ?? $jsonPart['name'];
-    	return <<<HTML
-    	
-	<div class='form-text'>
-		<label>{$label}</label>
-		<span class='form-value'>{$values}</span>
-		<span class='form-description'>{$jsonPart['description']}</label>
-	</div>
-HTML;
+    	return $this->renderQuestion($jsonPart, $values);
     }
     
     /**

@@ -1,0 +1,109 @@
+.form {
+  padding: 0;
+}
+
+	.form h1 {
+	  margin: 10px 0;
+	}
+	
+	.form h2 {
+	  margin: 9px 0;
+	}
+	
+	.form h3, h4, h5, h6 {
+	  margin: 6px 0;
+	}
+
+
+.form-page{
+  padding: 5px;
+  display: grid;
+}
+	
+	.form-page table {
+	  page-break-inside: avoid;
+	  text-align: center;
+	  border-collapse: separate;
+	  border-spacing: 0;
+	  border: 1px solid #000;
+	  margin: 10px auto;
+	  width: 100%;
+	}
+
+	.form-page thead > tr {
+	  page-break-after: avoid;
+	}
+	
+	.form-page th {
+	  text-align: center;
+	  padding: 2px 7px;
+	  border-bottom: 3px solid #ddd;
+	}
+	
+	.form-page .form-row-title-entry {
+	  text-align: left;
+	}
+	
+	.form-page tbody td {
+	  text-align: center;
+	  padding: 2px 7px;
+	  border-bottom: 1px solid #ddd;
+	}
+  
+.form-page-title {
+  text-align: left;
+}
+
+.form-panel-title {
+  text-align: left;
+}
+
+.form-panel {
+  border: 1px solid #000;
+  padding: 5px 10px;
+  vertical-align: middle;
+  margin: 10px 0;
+  display: grid;
+}
+
+.form-question {
+  padding: 2px 6px;
+  vertical-align: middle;
+  text-align: left  !important;
+  margin: 0 !important;
+  border: 0 !important;
+}
+	
+	.form-question td {
+	  text-align: left !important;
+	  width: 50%;
+	  padding: 3px 2px !important;
+	  vertical-align: middle;
+	  white-space: normal;
+	}
+
+.form-value {
+  width: 40%;
+  vertical-align: middle ;
+  white-space: normal;
+}
+
+.form-description {
+  margin-left: 7px;
+}
+
+	.form-description td {
+	  vertical-align: middle ;
+	  white-space: normal;
+	}
+
+.form-items span {
+  padding: .5em
+}
+
+.form-footer {
+  font-style: italic;
+  padding: 0 10px;
+  margin-top: 8px;
+  width: 100%;
+}
