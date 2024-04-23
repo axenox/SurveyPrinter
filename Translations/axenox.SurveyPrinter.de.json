@@ -1,3 +1,6 @@
 {
-  "FORM.HAS_NO_CONTENT": "Es wurde kein Formular ausgewählt oder das ausgewählte Formular wurde nicht ausgefüllt."
+  "FORM.HAS_NO_CONTENT": "Es wurde kein Formular ausgewählt oder das ausgewählte Formular wurde nicht ausgefüllt.",
+  "FOOTER.CONTENT": "Das Formular enthält nur ausgefüllte Inhalte.",
+  "BOOLEAN.TRUE": "Ja",
+  "BOOLEAN.FALSE": "Nein"
 }

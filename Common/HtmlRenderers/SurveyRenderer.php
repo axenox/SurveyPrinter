@@ -7,6 +7,7 @@ use axenox\SurveyPrinter\Interfaces\RendererResolverInterface;
 use exface\Core\Exceptions\InvalidArgumentException;
 use exface\Core\Exceptions\Configuration\ConfigOptionNotFoundError;
 use exface\Core\CommonLogic\Workbench;
+use exface\Core\Interfaces\ConfigurationInterface;
 
 /**
  * The SurveyRenderer takes a SurveyJs and tries to resolve all it's elements. He needs an array of all renderers by type
@@ -16,14 +17,19 @@ use exface\Core\CommonLogic\Workbench;
  */
 class SurveyRenderer implements RendererInterface,  RendererResolverInterface
 {
+    private $config;
+
 	protected Workbench $workbench;
 	protected array $renderersByType;
 	private  int $headingLevel;
+    private int $maxRowLength;
 	
-	public function __construct(Workbench $workbench, array $renderersByType)
+	public function __construct(Workbench $workbench, ConfigurationInterface $config)
 	{
+        $this->config = $config;
 		$this->workbench = $workbench;
-		$this->renderersByType = $renderersByType;
+		$this->renderersByType = $config->getOption('RENDERERS_BY_TYPE')->toArray();
+        $this->maxRowLength =  $config->getOption('TABLE_CONFIG')->toArray()['MAX_ROW_LENGTH'];
 	}
 	
 	/**
@@ -52,16 +58,13 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
         
     public function findRenderer(array $jsonPart): RendererInterface
     {
-    	
     	if (array_key_exists('type', $jsonPart) === false){
     		return new $this->renderersByType['none']($this);
     	}
     	
     	if (array_key_exists($jsonPart['type'], $this->renderersByType) === false){
     		$this->workbench->getLogger()->logException(new ConfigOptionNotFoundError(
-    			$this->workbench
-	    			->getApp(SurveyAsHTML::FOLDER_NAME_APPALIAS)
-	    			->getConfig(),
+    			$this->config,
     			'Unkown render target type: ' . $jsonPart['type']));
     		return new InvisibleRenderer($this); // TODO: delete when not found handler implemented
     		// return new NotFoundRenderer($this); 
@@ -108,4 +111,13 @@ HTML;
     	$this->headingLevel--;
     }
 
+    public function getMaxRowLength()
+    {
+        return $this->maxRowLength;
+    }
+
+    public function getTranslator(): \exface\Core\Interfaces\TranslationInterface
+    {
+        return $this->workbench->getApp('axenox.SurveyPrinter')->getTranslator();
+    }
 }

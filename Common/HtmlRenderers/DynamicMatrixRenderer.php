@@ -53,23 +53,31 @@ use axenox\SurveyPrinter\Interfaces\RendererInterface;
  * @author miriam.seitz
  */
 class DynamicMatrixRenderer extends  AbstractRenderer
-{	
+{
+    private $columnsWithSpecifiedFormat = [];
+
 	public function render(array $jsonPart, array $awnserJson) : string
 	{
+        $tableHeader = '';
+        $rowValues = [];
 		$attributes = $this->renderAttributesToRender($jsonPart);
-    	foreach ($jsonPart['columns'] as $column)
-    	{
-    		$tableHeader .= '<th>' . ($column['title'] ?? $column['name'])  . '</th>';
-    	}
-    	
-    	
+
     	foreach ($awnserJson[$jsonPart['name']] as $row){
-    		$tableContent .= '<tr>' . $this->readEntireRow($jsonPart['columns'], $row) . '</tr>';
+            $rowValues[] = $this->readEntireRow($jsonPart['columns'], $row);
     	}
-    	
-    	if ($tableContent === ''){
-    		return '';
-    	}
+
+        if (empty($rowValues)){
+            return '';
+        }
+
+        foreach ($jsonPart['columns'] as $column){
+            $columnName = $column['title'] ?? $column['name'];
+            if (array_key_exists($columnName, $this->columnsWithSpecifiedFormat) && $this->columnsWithSpecifiedFormat[$columnName] === 'row') {
+                continue;
+            }
+
+            $tableHeader .= '<th>' . $columnName  . '</th>';
+        }
     	
         return <<<HTML
         
@@ -82,26 +90,62 @@ class DynamicMatrixRenderer extends  AbstractRenderer
 				</tr>
 			</thead>
 			<tbody>
-				{$tableContent}
+				{$this->printRows($rowValues)}
 			</tbody>
 		</table>
 	</div>
 HTML;
     }
 
-    protected function readEntireRow($jsonPart, $awnserJson){
+    protected function readEntireRow(array $jsonPart, array $awnserJson): array
+    {
+        $rowValues = [];
     	foreach ($jsonPart as $column){
-    		$value = $awnserJson[$column['name']];
-    		if (is_bool($value)){
-    			$value = $value === true ? "Ja" : "Nein";
-    		}
-    		
-    		$row .= '<td>' . $value . '</td>'; 
-    	}
-    	
-    	return $row;
+            $columnName = $column['title'] ?? $column['name'];
+            $value = $awnserJson[$column['name']];
+
+            if (is_bool($value)) {
+                $translator = $this->resolver->getTranslator();
+                $value = $value === true ? $translator->translate('BOOLEAN.TRUE') : $translator->translate('BOOLEAN.FALSE');
+            }
+
+            if ($this->exceedsMaxRowLength(strlen($value))) {
+                $this->columnsWithSpecifiedFormat[$columnName] = 'row';
+            }
+
+            $rowValues[$columnName] = $value;
+        }
+
+        return $rowValues;
     }
 
-    
-    
+    protected function printRows(array $rows)
+    {
+        $tableContent = '';
+        foreach ($rows as $rowContent => $rowValues){
+            $row = '<tr>';
+            $extraRow = null;
+            foreach($rowValues as $column => $rowValue){
+                if ($this->columnsWithSpecifiedFormat[$column] === 'row') {
+                    $extraRow = '<td>' . $column . '</td>'
+                        . '<td style="text-align:left" colspan="'. count($rowValues)-1 .'">' . $rowValue . '</td>';
+                } else {
+                    $row .= '<td>' . $rowValue . '</td>';
+                }
+            }
+            $row .= '</tr>';
+            $tableContent .= $row;
+
+            if ($extraRow !== null) {
+                $tableContent .= '<tr>' . $extraRow . '</tr>';
+            }
+        }
+
+        return $tableContent;
+    }
+
+    private function exceedsMaxRowLength(mixed $rowValue) : bool
+    {
+        return $rowValue >  $this->resolver->getMaxRowLength();
+    }
 }

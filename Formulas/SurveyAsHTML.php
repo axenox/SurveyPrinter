@@ -49,8 +49,7 @@ class SurveyAsHTML extends Formula
      */
 	public function run(string $surveyJson = null, string $awnserJson = null, string $design = 'table', int $headingLevel = 3) : string
     {
-    	$renderersByType = $this->getWorkbench()->getApp(self::FOLDER_NAME_APPALIAS)
-    		->getConfig()->getOption('RENDERERS_BY_TYPE')->toArray();
+    	$config = $this->getWorkbench()->getApp(self::FOLDER_NAME_APPALIAS)->getConfig();
     	
     	if ($awnserJson === null){
             $translator = $this->getWorkbench()->getApp('axenox.SurveyPrinter')->getTranslator();
@@ -66,7 +65,7 @@ class SurveyAsHTML extends Formula
     		return 'Given JSON cannot be resolved. Please validate format.';
     	}
     	
-    	return (new SurveyRenderer($this->getWorkbench(), $renderersByType))
+    	return (new SurveyRenderer($this->getWorkbench(), $config))
     		->render($surveyJson, $awnserJson, $this->getStyleCssPath($design), $headingLevel);
     }
     

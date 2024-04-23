@@ -85,22 +85,24 @@ class MatrixRenderer extends AbstractRenderer
 	{
 		$attributes = $this->renderAttributesToRender($jsonPart);
     	$tableContent = '';
-    	
-    	// add empty row name column
-    	$tableHeader .= '<th/>';
+
+        // add empty header value for the right format of table:
+        // ___|__A__|__B__|
+        // _X_|__1__|__3__|
+    	$tableHeader = '<th/>';
     	foreach ($jsonPart['columns'] as $column)
-    	{    		
+    	{
     		if (is_string($column)) {
     			$tableHeader .= '<th>' . $column . '</th>';
-    		} else {    			
-    			// this is ugly becaus SurveyJs made something stupid (see last summary entry)
+    		} else {
+    			// this is ugly becaus SurveyJs made something foolish (see last summary entry)
 	    		$tableHeader .= '<th>' . ($column['text'] ?? $column['value'] ?? $column['title'] ?? $column['name']) . '</th>';
     		}
     	}
-    	
+
     	foreach ($jsonPart['rows'] as $row){
     		$tableContent .= '<tr>';
-    		
+
     		$rowEntryTitleCssClass = 'form-row-title-entry';
     		if (is_string($row)) {
     			$rowName = $row;
@@ -109,7 +111,7 @@ class MatrixRenderer extends AbstractRenderer
     			$rowName = $row['value'];
     			$tableContent .= '<td class=' . $rowEntryTitleCssClass .'>'. ($row['text'] ?? $row['value']) . '</td>';
     		}
-    		
+
     		$awnser = $awnserJson[$jsonPart['name']][$rowName];
     		foreach ($jsonPart['columns'] as $column){
     			if (array_key_exists('choices', $jsonPart)) {
@@ -120,14 +122,14 @@ class MatrixRenderer extends AbstractRenderer
 	    			$tableContent .= '<td>' . ($awnser === $columnName ? 'X' : '') . '</td>';
 	    		}
     		}
-    		
+
     		$tableContent .= '</tr>';
-    	}    	
-    	
+    	}
+
     	if ($tableContent === ''){
     		return '';
     	}
-    	
+
         return <<<HTML
         
 	<div style='page-break-inside: avoid;'>
@@ -143,9 +145,9 @@ class MatrixRenderer extends AbstractRenderer
 	</div>
 HTML;
     }
-    
+
     /**
-     * Evaluates the choice either 
+     * Evaluates the choice either
      * with text
      *  {
      * 		"value": "item1",
@@ -154,7 +156,7 @@ HTML;
      * or without:
      * value: "item1"
      *
-     * @param array $choice 
+     * @param array $choice
      * @param mixed $awnser can be either an array, a string or null
      * @return string|NULL
      */
@@ -162,13 +164,13 @@ HTML;
     {
     	if (is_array($awnser)){
     		if (key_exists($columnName, $awnser)){
-    			$awnser = $awnser[$columnName];    			
+    			$awnser = $awnser[$columnName];
     		}
     		else {
     			return '';
     		}
     	}
-    	
+
     	foreach ($choices as $choice) {
     		if (is_array($choice)){
     			if ($this->matchAwnser($choice['value'], $awnser)){
@@ -178,22 +180,22 @@ HTML;
     			return $choice;
     		}
     	}
-    	
+
     	return '';
     }
-    
+
     protected function matchAwnser(string $choice, mixed $awnser) : bool
     {
     	return is_array($awnser) ?
 	    	$this->searchValueInMultipleAwnsers($choice, $awnser) :
 	    	$this->matchWithAwnser($choice, $awnser);
     }
-    
+
     protected function searchValueInMultipleAwnsers(string $choice, array $awnserArray) : bool
     {
     	return in_array($choice, $awnserArray);
     }
-    
+
     protected function matchWithAwnser(string $choice, ?string $awnser) : bool
     {
     	return $choice === $awnser;
