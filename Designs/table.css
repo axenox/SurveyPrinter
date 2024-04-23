@@ -1,19 +1,25 @@
+body, div, p, a, table {
+	font-size: 13px;
+}
+
 .form {
   padding: 0;
 }
 
 	.form h1 {
+	  font-size: 13px;
 	  margin: 10px 0;
 	}
 	
 	.form h2 {
+	  font-size: 13px;
 	  margin: 9px 0;
 	}
 	
 	.form h3, h4, h5, h6 {
+	  font-size: 13px;
 	  margin: 6px 0;
 	}
-
 
 .form-page{
   padding: 5px;

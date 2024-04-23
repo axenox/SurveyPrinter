@@ -10,4 +10,6 @@ namespace axenox\SurveyPrinter\Interfaces;
 interface RendererResolverInterface
 {	
 	public function findRenderer(array $jsonPart): RendererInterface;
+
+    public function getMaxRowLength();
 }

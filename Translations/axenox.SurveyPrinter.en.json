@@ -1,3 +1,6 @@
 {
-  "FORM.HAS_NO_CONTENT": "No form has been selected or filled in yet."
+  "FORM.HAS_NO_CONTENT": "No form has been selected or filled in yet.",
+  "FOOTER.CONTENT": "This form only contains filled in values.",
+  "BOOLEAN.TRUE": "Yes",
+  "BOOLEAN.FALSE": "No"
 }
