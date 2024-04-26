@@ -10,6 +10,10 @@
 		 "multipletext": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\MultipleTextRenderer",
 		 "matrixdynamic": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\DynamicMatrixRenderer",
 		 "matrix": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\MatrixRenderer",
-		 "matrixdropdown": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\MatrixRenderer"
+		 "matrixdropdown": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\MatrixRenderer",
+		 "html": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\HtmlRenderer"
+	},
+	"TABLE_CONFIG": {
+		"MAX_ROW_LENGTH": 60
 	}
 }

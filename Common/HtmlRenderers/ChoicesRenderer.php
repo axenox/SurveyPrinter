@@ -58,20 +58,32 @@ class ChoicesRenderer extends QuestionRenderer
     	$awnser = $awnserJson[$jsonPart['name']];    
     		
     	$firstItem = true;
-    	foreach ($choices as $choice){
-    		$value = null;
-    		if (is_array($choice)) {
-    			$value = $this->evaluateItemWithMoreInformation($choice, $awnser);
-    		} else {
-    			$value = $this->evaluateItem($choice,$awnser);
-    		}
-    		
-    		if ($value !== null){
-	    		$values .= $firstItem ? $value : ', ' . $value;
-	    		$firstItem = false;
-    		}    		
-    	}
+    	$showOtherItem = $jsonPart['showOtherItem'] ?? false;
+    	$showNoneItem = $jsonPart['showNoneItem'] ?? false;
     	
+    	switch (true){
+        case $awnser == 'other' && $showOtherItem === true:
+            $otherComment = $awnserJson[$jsonPart['name'] . '-Comment'];
+            $values = $jsonPart['otherText'] . ($otherComment ? ' - ' . $otherComment : '');
+            break;
+        case $awnser == 'none' && $showNoneItem === true:
+            $values = '';
+            break;
+        default:
+            foreach ($choices as $choice){
+                $value = null;
+                if (is_array($choice)) {
+                    $value = $this->evaluateItemWithMoreInformation($choice, $awnser);
+                } else {
+                    $value = $this->evaluateItem($choice,$awnser);
+                }
+                
+                if ($value !== null){
+                    $values .= $firstItem ? $value : ', ' . $value;
+                    $firstItem = false;
+                }
+            }
+    	}
     	return $this->renderQuestion($jsonPart, $values);
     }
     

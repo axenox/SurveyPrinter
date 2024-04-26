@@ -58,7 +58,7 @@ HTML;
         $this->resolver->increaseLevel();
         foreach ($elements as $el) {
         	// element is an array
-        	if (is_numeric($el)){        		
+        	if (is_numeric($el)) {
         		foreach ($el as $jsonElement) {
         			$htmlElement = $this->resolver->findRenderer($jsonElement)->render($jsonElement, $awnserJson);
         			$html .= $htmlElement;
@@ -84,11 +84,12 @@ HTML;
     	if (array_key_exists('pages', $jsonPart) === false){
     		return '';
     	}
-    	
+
+        $footerContent = $this->resolver->getTranslator()->translate('FOOTER.CONTENT');
     	return <<<HTML
     	
 	<div class="form-footer">
-		Das Formular enthält nur ausgefüllte Inhalte.
+		$footerContent
 	</div>
 HTML;
     }
