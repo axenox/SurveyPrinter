@@ -10,7 +10,7 @@ use exface\Core\Exceptions\FormulaError;
 use exface\Core\CommonLogic\Filemanager;
 
 /**
- * Use this formular to create a HTML from a SurveyJs form within ´Formular__FormularConfig´ and the awnsers within ´FormularDaten´.
+ * Use this formular to create a HTML from a SurveyJs form within ´Formular__FormularConfig´ and the answers within ´FormularDaten´.
  * You can pass different design as the last parameter, the default is the ´form´ design if no parameter was passed.
  *
  * ## Different designs
@@ -47,18 +47,18 @@ class SurveyAsHTML extends Formula
      * {@inheritDoc}
      * @see \exface\Core\CommonLogic\Model\Formula::run()
      */
-	public function run(string $surveyJson = null, string $awnserJson = null, string $design = 'table', int $headingLevel = 3) : string
+	public function run(string $surveyJson = null, string $answerJson = null, string $design = 'table', int $headingLevel = 3) : string
     {
     	$config = $this->getWorkbench()->getApp(self::FOLDER_NAME_APPALIAS)->getConfig();
     	
-    	if ($awnserJson === null){
+    	if ($answerJson === null){
             $translator = $this->getWorkbench()->getApp('axenox.SurveyPrinter')->getTranslator();
     		return $translator->translate('FORM.HAS_NO_CONTENT');
     	}
     	
     	try {
     		$surveyJson = JsonDataType::decodeJson($surveyJson);
-    		$awnserJson = JsonDataType::decodeJson($awnserJson);
+    		$answerJson = JsonDataType::decodeJson($answerJson);
     	} catch(\Throwable $e) {
     		$this->getWorkbench()->getLogger()->logException(
     			new FormulaError('Given JSON cannot be resolved. Please validate format.', null, $e));
@@ -66,7 +66,7 @@ class SurveyAsHTML extends Formula
     	}
     	
     	return (new SurveyRenderer($this->getWorkbench(), $config))
-    		->render($surveyJson, $awnserJson, $this->getStyleCssPath($design), $headingLevel);
+    		->render($surveyJson, $answerJson, $this->getStyleCssPath($design), $headingLevel);
     }
     
     /**
