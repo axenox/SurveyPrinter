@@ -8,6 +8,7 @@ use exface\Core\Exceptions\InvalidArgumentException;
 use exface\Core\Exceptions\Configuration\ConfigOptionNotFoundError;
 use exface\Core\CommonLogic\Workbench;
 use exface\Core\Interfaces\ConfigurationInterface;
+use exface\Core\Interfaces\WorkbenchInterface;
 
 /**
  * The SurveyRenderer takes a SurveyJs and tries to resolve all it's elements. He needs an array of all renderers by type
@@ -31,19 +32,19 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
 		$this->renderersByType = $config->getOption('RENDERERS_BY_TYPE')->toArray();
         $this->maxRowLength =  $config->getOption('TABLE_CONFIG')->toArray()['MAX_ROW_LENGTH'];
 	}
-	
-	/**
-	 *
-	 * @param array $surveyJson
-	 * @param array $awnserJson
-	 * @param string $cssPath
-	 * @param int $headingLevel
-	 * @return string
-	 */
-    public function render(array $surveyJson, array $awnserJson, string $cssPath = null, int $headingLevel = 1): string
+
+    /**
+     *
+     * @param array $surveyJson
+     * @param array $answerJson
+     * @param string|null $cssPath
+     * @param int $headingLevel
+     * @return string
+     */
+    public function render(array $surveyJson, array $answerJson, string $cssPath = null, int $headingLevel = 1): string
     {
     	$this->headingLevel = $headingLevel;
-    	return $this->createStyleHeader($cssPath) . $this->renderElements($surveyJson, $awnserJson);
+    	return $this->createStyleHeader($cssPath) . $this->renderElements($surveyJson, $answerJson);
     }
     
     /**
@@ -51,9 +52,9 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
      * @param array $json
      * @return string
      */
-    public function renderElements(array $json, $awnserJson) : string
+    public function renderElements(array $json, $answerJson) : string
     {
-        return $this->findRenderer($json)->render($json, $awnserJson);
+        return $this->findRenderer($json)->render($json, $answerJson);
     }
         
     public function findRenderer(array $jsonPart): RendererInterface
@@ -65,7 +66,7 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
     	if (array_key_exists($jsonPart['type'], $this->renderersByType) === false){
     		$this->workbench->getLogger()->logException(new ConfigOptionNotFoundError(
     			$this->config,
-    			'Unkown render target type: ' . $jsonPart['type']));
+    			'Unknown render target type: ' . $jsonPart['type']));
     		return new InvisibleRenderer($this); // TODO: delete when not found handler implemented
     		// return new NotFoundRenderer($this); 
     	}
@@ -114,6 +115,11 @@ HTML;
     public function getMaxRowLength()
     {
         return $this->maxRowLength;
+    }
+
+    public function getWorkbench() : WorkbenchInterface
+    {
+        return $this->workbench;
     }
 
     public function getTranslator(): \exface\Core\Interfaces\TranslationInterface

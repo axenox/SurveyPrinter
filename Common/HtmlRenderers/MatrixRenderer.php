@@ -2,11 +2,15 @@
 namespace axenox\SurveyPrinter\Common\HtmlRenderers;
 
 use axenox\SurveyPrinter\Interfaces\RendererInterface;
+use exface\Core\DataTypes\DateDataType;
+use exface\Core\DataTypes\DateTimeDataType;
 
 /**
- * This renderer is a strict renderer for panels of a SurveyJs.
- * The SurveyJs has to have an array ´columns´ and ´rows´ that differ regarding the presents of choices and text or title:
- * one choice matrix without title
+ * A strict renderer for SurveyJs panels.
+ * The SurveyJs must have an array ´columns´ and ´rows´ and match one of these patterns:
+ *
+ * **Single choice matrix without title**
+ *
  * "type": "matrix",
  * "name": "question1",
  * "title": "Matrix single choice", // optional
@@ -22,7 +26,8 @@ use axenox\SurveyPrinter\Interfaces\RendererInterface;
  * 		"Row 2"
  * ]
  * 
- * multiple choice matric with title
+ * **Multiple choice matrix with title**
+ *
  * ´"type": "matrixdropdown",
  * "name": "question3",
  * "title": "Matrix multiple choice", // optional
@@ -58,7 +63,8 @@ use axenox\SurveyPrinter\Interfaces\RendererInterface;
  * 	}
  * ]´
  * 
- * The awnser differs as well regarding the presents of choices: * 
+ * **Mixed**
+ *
  * 	´"matrixSingleChoiceName": {
  *		"Row 1": "Column 1",
  *		"Row 2": "Column 2"
@@ -75,13 +81,13 @@ use axenox\SurveyPrinter\Interfaces\RendererInterface;
  *		}
  *	},
  * ]´
- * (!) columns and rows of matrix without choices shows columns with ´value´ and ´text´ while matrix with ´choices´ show ONLY IN COLUMNS the schema of ´name´ and ´title´ (this sould be reported to SurveyJs)
+ * (!) Columns and rows of matrices without choices show columns with ´value´ and ´text´ while matrix with ´choices´ show ONLY IN COLUMNS the schema of ´name´ and ´title´ (this sould be reported to SurveyJs)
  *
  * @author miriam.seitz
  */
 class MatrixRenderer extends AbstractRenderer
 {	
-	public function render(array $jsonPart, array $awnserJson) : string
+	public function render(array $jsonPart, array $answerJson) : string
 	{
 		$attributes = $this->renderAttributesToRender($jsonPart);
     	$tableContent = '';
@@ -95,7 +101,7 @@ class MatrixRenderer extends AbstractRenderer
     		if (is_string($column)) {
     			$tableHeader .= '<th>' . $column . '</th>';
     		} else {
-    			// this is ugly becaus SurveyJs made something foolish (see last summary entry)
+    			// this is ugly because SurveyJs made something foolish (see last summary entry)
 	    		$tableHeader .= '<th>' . ($column['text'] ?? $column['value'] ?? $column['title'] ?? $column['name']) . '</th>';
     		}
     	}
@@ -112,14 +118,19 @@ class MatrixRenderer extends AbstractRenderer
     			$tableContent .= '<td class=' . $rowEntryTitleCssClass .'>'. ($row['text'] ?? $row['value']) . '</td>';
     		}
 
-    		$awnser = $awnserJson[$jsonPart['name']][$rowName];
-    		foreach ($jsonPart['columns'] as $column){
+    		$answer = $answerJson[$jsonPart['name']][$rowName];
+    		foreach ($jsonPart['columns'] as $column) {
     			if (array_key_exists('choices', $jsonPart)) {
     				$columnName = is_string($column) ? $column : $column['name'];
-    				$tableContent .= '<td>' . $this->matchChoiceWithAwnser($jsonPart['choices'], $awnser, $columnName) . '</td>';
+                    $output = $this->matchChoiceWithAnswer($jsonPart['choices'], $answer, $columnName);
+    				$tableContent .= '<td>' . $this->handleCellTypes($output) . '</td>';
 	    		} else {
-	    			$columnName = is_string($column) ? $column : $column['value'];
-	    			$tableContent .= '<td>' . ($awnser === $columnName ? 'X' : '') . '</td>';
+	    			$columnName = is_string($column) ? $column : $column['name'];
+                    if(is_string($answer)) {
+	    			    $tableContent .= '<td>' . ($answer === $columnName ? 'X' : '') . '</td>';
+                    } else {
+                        $tableContent .= '<td>' . $this->handleCellTypes($answer[$columnName]). '</td>';
+                    }
 	    		}
     		}
 
@@ -147,6 +158,30 @@ HTML;
     }
 
     /**
+     * Checks whether a string matches a certain cell type (i.e. a date or date-time) and
+     * formats it accordingly.
+     *
+     * @param string $input
+     * @return string
+     */
+    private function handleCellTypes(?string $input) : string
+    {
+        // STUB: Can be expanded with more cases, if needed.
+        switch (true) {
+            // NULL
+            case (empty($input)):
+                $input = '';
+                break;
+            // Date | DateTime
+            case (strtotime($input)) :
+                $result = DateTimeDataType::cast($input, true);
+                return  DateDataType::formatDateLocalized($result, $this->resolver->getWorkbench());
+        }
+
+        return $input;
+    }
+
+    /**
      * Evaluates the choice either
      * with text
      *  {
@@ -156,15 +191,15 @@ HTML;
      * or without:
      * value: "item1"
      *
-     * @param array $choice
-     * @param mixed $awnser can be either an array, a string or null
+     * @param array $choices
+     * @param mixed $answer can be either an array, a string or null
      * @return string|NULL
      */
-    protected function matchChoiceWithAwnser(array $choices, mixed $awnser, string $columnName) : ?string
+    protected function matchChoiceWithAnswer(array $choices, mixed $answer, string $columnName) : ?string
     {
-    	if (is_array($awnser)){
-    		if (key_exists($columnName, $awnser)){
-    			$awnser = $awnser[$columnName];
+    	if (is_array($answer)){
+    		if (key_exists($columnName, $answer)){
+    			$answer = $answer[$columnName];
     		}
     		else {
     			return '';
@@ -173,32 +208,32 @@ HTML;
 
     	foreach ($choices as $choice) {
     		if (is_array($choice)){
-    			if ($this->matchAwnser($choice['value'], $awnser)){
+    			if ($this->matchAnswer($choice['value'], $answer)){
     				return $choice['text'];
     			}
-    		} else if ($this->matchAwnser($choice, $awnser)){
+    		} else if ($this->matchAnswer($choice, $answer)){
     			return $choice;
     		}
     	}
 
-    	return '';
+    	return $answer;
     }
 
-    protected function matchAwnser(string $choice, mixed $awnser) : bool
+    protected function matchAnswer(string $choice, mixed $answer) : bool
     {
-    	return is_array($awnser) ?
-	    	$this->searchValueInMultipleAwnsers($choice, $awnser) :
-	    	$this->matchWithAwnser($choice, $awnser);
+    	return is_array($answer) ?
+	    	$this->searchValueInMultipleAnswers($choice, $answer) :
+	    	$this->matchWithAnswer($choice, $answer);
     }
 
-    protected function searchValueInMultipleAwnsers(string $choice, array $awnserArray) : bool
+    protected function searchValueInMultipleAnswers(string $choice, array $answerArray) : bool
     {
-    	return in_array($choice, $awnserArray);
+    	return in_array($choice, $answerArray);
     }
 
-    protected function matchWithAwnser(string $choice, ?string $awnser) : bool
+    protected function matchWithAnswer(string $choice, ?string $answer) : bool
     {
-    	return $choice === $awnser;
+    	return $choice === $answer;
     }
     
 }
