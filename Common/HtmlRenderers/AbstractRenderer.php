@@ -13,11 +13,11 @@ use axenox\SurveyPrinter\Interfaces\RendererResolverInterface;
 abstract class AbstractRenderer implements RendererInterface
 {
 	protected RendererResolverInterface $resolver;
-	
-	/**
-	 * 
-	 * @param array $awnserJson
-	 */
+
+    /**
+     *
+     * @param RendererResolverInterface $resolver
+     */
 	public function __construct(RendererResolverInterface $resolver)
 	{
 		$this->resolver = $resolver;
