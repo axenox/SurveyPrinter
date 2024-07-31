@@ -9,6 +9,7 @@ use exface\Core\Exceptions\Configuration\ConfigOptionNotFoundError;
 use exface\Core\CommonLogic\Workbench;
 use exface\Core\Interfaces\ConfigurationInterface;
 use exface\Core\Interfaces\WorkbenchInterface;
+use exface\Core\Interfaces\Log\LoggerInterface;
 
 /**
  * The SurveyRenderer takes a SurveyJs and tries to resolve all it's elements. He needs an array of all renderers by type
@@ -66,7 +67,7 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
     	if (array_key_exists($jsonPart['type'], $this->renderersByType) === false){
     		$this->workbench->getLogger()->logException(new ConfigOptionNotFoundError(
     			$this->config,
-    			'Unknown render target type: ' . $jsonPart['type']));
+    		    'Unknown render target type: ' . $jsonPart['type']), LoggerInterface::ERROR);
     		return new InvisibleRenderer($this); // TODO: delete when not found handler implemented
     		// return new NotFoundRenderer($this); 
     	}
