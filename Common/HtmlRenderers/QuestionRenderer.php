@@ -31,8 +31,15 @@ HTML;
     }
     	
     protected function renderQuestion(array $jsonPart, string $renderedValues)
-    {    		
-    	$label = $jsonPart['title'] ?? $jsonPart['name'];
+    {
+        // TODO: This fix is brittle and must be implemented anywhere the title attribute is read.
+    	$title = $jsonPart['title'] ?? $jsonPart['name'];
+        if(is_array($title)) {
+            $label = $title['default'];
+        } else {
+            $label = $title;
+        }
+
     	$description = $this->renderDescriptionIfAvailable($jsonPart);  
     	
     	switch ($jsonPart['type']){
