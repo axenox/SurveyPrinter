@@ -52,8 +52,12 @@ abstract class AbstractRenderer implements RendererInterface
 			default:
 				$cssClass = 'form-page-title';
 		}
+
+        // TODO: This fix is brittle and must be implemented anywhere the title attribute is read.
+        $title = is_array($jsonPart['title']) ? $jsonPart['title']['default'] : $jsonPart['title'];
+
 		return <<<HTML
-    		<h{$this->resolver->getLevel()} class='{$cssClass}' style='page-break-after: avoid;'>{$jsonPart['title']}</h{$this->resolver->getLevel()}>
+    		<h{$this->resolver->getLevel()} class='{$cssClass}' style='page-break-after: avoid;'>{$title}</h{$this->resolver->getLevel()}>
  HTML;
 	}
 }
