@@ -1,7 +1,6 @@
 <?php
 namespace axenox\SurveyPrinter\Common\HtmlRenderers;
 
-use axenox\SurveyPrinter\Formulas\SurveyAsHTML;
 use axenox\SurveyPrinter\Interfaces\RendererInterface;
 use axenox\SurveyPrinter\Interfaces\RendererResolverInterface;
 use exface\Core\Exceptions\InvalidArgumentException;
@@ -47,10 +46,11 @@ class SurveyRenderer implements RendererInterface,  RendererResolverInterface
     	$this->headingLevel = $headingLevel;
     	return $this->createStyleHeader($cssPath) . $this->renderElements($surveyJson, $answerJson);
     }
-    
+
     /**
      *
      * @param array $json
+     * @param       $answerJson
      * @return string
      */
     public function renderElements(array $json, $answerJson) : string

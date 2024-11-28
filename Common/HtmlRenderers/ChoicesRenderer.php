@@ -1,12 +1,10 @@
 <?php
 namespace axenox\SurveyPrinter\Common\HtmlRenderers;
 
-use axenox\SurveyPrinter\Interfaces\RendererInterface;
-
 /**
  * The ChoicesRenderer should be used to render SurveyJs elements with a ´choices´ array.
  * 
- * The configuration differs for both SurveyJs and awnser json.
+ * The configuration differs for both SurveyJs and answer json.
  * If the SurveyJs only contains values and no corresponding text (like a title) the json will look like this:
  * ´"choices": [
 		"item1",
@@ -30,9 +28,9 @@ use axenox\SurveyPrinter\Interfaces\RendererInterface;
  *		}
  *	]´
  * 
- * In the awnser json will either be one awnser:
+ * In the answer json will either be one answer:
  * ´"nameOfQuestion": "item1"´
- * or an array with multiple awnsers:
+ * or an array with multiple answer:
  * ´"nameOfQuestion": [
 		"item1",
 		"item2"
@@ -48,41 +46,41 @@ class ChoicesRenderer extends QuestionRenderer
      * {@inheritDoc}
      * @see \axenox\SurveyPrinter\Interfaces\RendererInterface::render()
      */
-    public function render(array $jsonPart, array $awnserJson): string
+    public function render(array $jsonPart, array $answerJson): string
     {
-    	if ($this->isPartOfAwnserJson($jsonPart, $awnserJson) === false) {
+    	if ($this->isPartOfAnswerJson($jsonPart, $answerJson) === false) {
     		return '';
     	}
     	
     	$choices = $jsonPart['choices'];
-    	$awnser = $awnserJson[$jsonPart['name']];    
+    	$answer = $answerJson[$jsonPart['name']];    
     		
     	$firstItem = true;
     	$showOtherItem = $jsonPart['showOtherItem'] ?? false;
     	$showNoneItem = $jsonPart['showNoneItem'] ?? false;
     	
     	switch (true){
-        case $awnser == 'other' && $showOtherItem === true:
-            $otherComment = $awnserJson[$jsonPart['name'] . '-Comment'];
-            $values = $jsonPart['otherText'] . ($otherComment ? ' - ' . $otherComment : '');
-            break;
-        case $awnser == 'none' && $showNoneItem === true:
-            $values = '';
-            break;
-        default:
-            foreach ($choices as $choice){
-                $value = null;
-                if (is_array($choice)) {
-                    $value = $this->evaluateItemWithMoreInformation($choice, $awnser);
-                } else {
-                    $value = $this->evaluateItem($choice,$awnser);
+            case $answer == 'other' && $showOtherItem === true:
+                $otherComment = $answerJson[$jsonPart['name'] . '-Comment'];
+                $values = $jsonPart['otherText'] . ($otherComment ? ' - ' . $otherComment : '');
+                break;
+            case $answer == 'none' && $showNoneItem === true:
+                $values = '';
+                break;
+            default:
+                $values = '';
+                foreach ($choices as $choice){
+                    if (is_array($choice)) {
+                        $value = $this->evaluateItemWithMoreInformation($choice, $answer);
+                    } else {
+                        $value = $this->evaluateItem($choice,$answer);
+                    }
+                    
+                    if ($value !== null){
+                        $values .= $firstItem ? $value : ', ' . $value;
+                        $firstItem = false;
+                    }
                 }
-                
-                if ($value !== null){
-                    $values .= $firstItem ? $value : ', ' . $value;
-                    $firstItem = false;
-                }
-            }
     	}
     	return $this->renderQuestion($jsonPart, $values);
     }
@@ -95,48 +93,48 @@ class ChoicesRenderer extends QuestionRenderer
      *  }
      * 
      * @param array $choice
-     * @param mixed $awnser can be either an array or a string
+     * @param mixed $answer can be either an array or a string
      * @return string|NULL
      */
-    protected function evaluateItemWithMoreInformation(array $choice, mixed $awnser) : ?string
+    protected function evaluateItemWithMoreInformation(array $choice, mixed $answer) : ?string
     {
-    	if ($this->matchAwnser($choice['value'], $awnser)){
+    	if ($this->matchAnswer($choice['value'], $answer)){
     		return $choice['text'];
     	}
     	
     	return null;
     }
-    
+
     /**
      * Evaluates a choice when it is only a value: "item1"
-     * 
-     * @param array $choice
-     * @param mixed $awnser can be either an array or a string
+     *
+     * @param string $choice
+     * @param mixed  $answer can be either an array or a string
      * @return string|NULL
      */
-    protected function evaluateItem(string $choice, mixed $awnser) : ?string 
+    protected function evaluateItem(string $choice, mixed $answer) : ?string 
     {
-    	if ($this->matchAwnser($choice, $awnser)){
+    	if ($this->matchAnswer($choice, $answer)){
     		return $choice;
     	}
     	
     	return null;
     }
     
-    protected function matchAwnser(string $choice, mixed $awnser) : bool
+    protected function matchAnswer(string $choice, mixed $answer) : bool
     {
-    	return is_array($awnser) ? 
-	    	$this->searchValueInMultipleAwnsers($choice, $awnser) : 
-	    	$this->matchWithAwnser($choice, $awnser);
+    	return is_array($answer) ? 
+	    	$this->searchValueInMultipleAnswers($choice, $answer) : 
+	    	$this->matchWithAnswer($choice, $answer);
     }
     
-    protected function searchValueInMultipleAwnsers(string $choice, array $awnserArray) : bool
+    protected function searchValueInMultipleAnswers(string $choice, array $answerArray) : bool
     {
-    	return in_array($choice, $awnserArray);
+    	return in_array($choice, $answerArray);
     }
     
-    protected function matchWithAwnser(string $choice, string $awnser) : bool
+    protected function matchWithAnswer(string $choice, string $answer) : bool
     {
-    	return $choice === $awnser;
+    	return $choice === $answer;
     }
 }
