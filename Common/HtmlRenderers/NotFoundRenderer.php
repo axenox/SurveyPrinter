@@ -10,7 +10,7 @@ class NotFoundRenderer implements RendererInterface
      * 
 	 * @author miriam.seitz
      */
-    public function render(array $jsonPart, array $awnserJson): string
+    public function render(array $jsonPart, array $answerJson): string
     {
     	return <<<HTML
     	

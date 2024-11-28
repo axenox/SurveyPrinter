@@ -13,7 +13,7 @@ class InvisibleRenderer implements RendererInterface
 	 */
 	public function render(
 		array $jsonPart,
-		array $awnserJson): string
+		array $answerJson): string
 	{
 		return '';
 	}

@@ -7,7 +7,7 @@ class DynamicPanelRenderer extends AbstractRenderer
      * This renderer is a strict renderer for panels of a SurveyJs.
 	 * The SurveyJs has to have an array ´templateElements´ that contains all related elements.
 	 * 
-	 * The awnser json for this panel is related to the panel with an inner layer to pass for the other elements.
+	 * The answer json for this panel is related to the panel with an inner layer to pass for the other elements.
 	 * ´"dynamicPanelName": [
 	 *	{
 	 *		"elementName": "Text",
@@ -18,14 +18,14 @@ class DynamicPanelRenderer extends AbstractRenderer
 	 *		"elementName2": false,
 	 *	}
 	 * ]´
-	 * (!) The elementNames in the dynamic panel will be equal but seperate objects in the array.
+	 * (!) The elementNames in the dynamic panel will be equal but separate objects in the array.
 	 * 
  	 * @author miriam.seitz
      */
-	public function render(array $jsonPart, array $awnserJson) : string
+	public function render(array $jsonPart, array $answerJson) : string
     {    	
     	$attributes = $this->renderAttributesToRender($jsonPart);
-    	$renderedElements =$this->renderElements($jsonPart, $awnserJson[$jsonPart['name']]);
+    	$renderedElements = $this->renderElements($jsonPart, $answerJson[$jsonPart['name']]);
     	if ($renderedElements === ''){
     		return '';
     	}
@@ -39,28 +39,30 @@ class DynamicPanelRenderer extends AbstractRenderer
 HTML;
     }
 
-    
+
     /**
      *
      * @param array $jsonPart
+     * @param array $answerJson
      * @return string
      */
-    public function renderElements(array $jsonPart, array $awnserJson) : string
+    public function renderElements(array $jsonPart, array $answerJson) : string
     {
-    	//elements should be on the next level
+    	// Elements should be on the next level.
     	$this->resolver->increaseLevel();
-    	// muiltiple panels with awnsers
-	    foreach($awnserJson as  $entry) {
+    	// Multiple panels with answer.
+        $html = '';
+	    foreach($answerJson as $entry) {
 			foreach ($jsonPart['templateElements'] as $element) {
-				// element is an array
-				if (is_numeric($element)) {
+				// Element is an array
+				if (is_array($element)) {
 					foreach ($element as $jsonObject) {
 						$htmlElement = $this->resolver->findRenderer($jsonObject)->render($jsonObject, $entry);
 						$html .= $htmlElement;
 					}
 					continue;
 				}
-				// skip expressions in export
+				// Skip expressions in export
 				if (array_key_exists('type', $element) && $element['type'] === 'expression') {
 					continue;
 				} else {
