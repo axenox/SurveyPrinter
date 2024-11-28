@@ -39,6 +39,7 @@ HTML;
     {
     	//elements should be on the next level
     	$this->resolver->increaseLevel();
+        $html = '';
     	foreach ($jsonPart['elements'] as $el) {
     		// element is an array
     		if (is_numeric($el)){

@@ -18,9 +18,14 @@ class HtmlRenderer extends AbstractRenderer
      */
     public function render(array $jsonPart, array $awnserJson): string
     {
-    	if ($jsonPart['html']) {
+    	if (($html = $jsonPart['html']) !== null) {
+            // TODO geb 2024-11-28: This may be an array, because the form offers localization options (i.e. ['de' => html, 'en' => html, ...])
+            // TODO We don't really use this feature at the moment, so we are just using the first option, hoping that it is the default.
+            if(is_array($html)) {
+                $html = $html[array_key_first($html)];
+            }
     	    return <<<html
-    	    <div style='page-break-after: avoid; page-break-inside: avoid;'>{$jsonPart['html']}</div>
+    	    <div style='page-break-after: avoid; page-break-inside: avoid;'>{$html}</div>
 html;
     	}
     		
