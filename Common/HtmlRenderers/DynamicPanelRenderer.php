@@ -54,20 +54,11 @@ HTML;
         $html = '';
 	    foreach($answerJson as $entry) {
 			foreach ($jsonPart['templateElements'] as $element) {
-				// Element is an array
-				if (is_array($element)) {
-					foreach ($element as $jsonObject) {
-						$htmlElement = $this->resolver->findRenderer($jsonObject)->render($jsonObject, $entry);
-						$html .= $htmlElement;
-					}
-					continue;
-				}
 				// Skip expressions in export
 				if (array_key_exists('type', $element) && $element['type'] === 'expression') {
 					continue;
 				} else {
-					$htmlElement = $this->resolver->findRenderer($element)->render($element, $entry);
-					$html .= $htmlElement;
+					$html .= $this->resolveElement($element, $entry);
 				}
 			}
 	    }

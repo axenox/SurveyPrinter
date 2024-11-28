@@ -42,18 +42,11 @@ HTML;
     	$this->resolver->increaseLevel();
         $html = '';
     	foreach ($jsonPart['elements'] as $el) {
-    		// element is an array
-    		if (is_array($el)){
-    			foreach ($el as $jsonElement) {
-    				$html .= $this->resolver->findRenderer($jsonElement)->render($jsonElement, $answerJson);
-    			}
-    			continue;
-    		}
     		// skip expressions in export
     		if (array_key_exists('type', $el) && $el['type'] === 'expression') {
     			continue;
     		} else {
-    			$html .= $this->resolver->findRenderer($el)->render($el, $answerJson);
+    			$html .= $this->resolveElement($el, $answerJson);
     		}
     	}
     	$this->resolver->decreaseLevel();

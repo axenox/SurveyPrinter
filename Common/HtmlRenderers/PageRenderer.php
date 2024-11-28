@@ -61,20 +61,11 @@ HTML;
         //elements should be on the next level
         $this->resolver->increaseLevel();
         foreach ($elements as $el) {
-        	// element is an array
-        	if (is_array($el)) {
-        		foreach ($el as $jsonElement) {
-        			$htmlElement = $this->resolver->findRenderer($jsonElement)->render($jsonElement, $answerJson);
-        			$html .= $htmlElement;
-        		}
-        		continue;
-        	}
         	// skip expressions in export
         	if (array_key_exists('type', $el) && $el['type'] === 'expression') {
         		continue;
         	} else {
-        		$htmlElement = $this->resolver->findRenderer($el)->render($el, $answerJson);
-        		$html .= $htmlElement;
+        		$html .= $this->resolveElement($el, $answerJson);
         	}
         }
         $this->resolver->decreaseLevel();

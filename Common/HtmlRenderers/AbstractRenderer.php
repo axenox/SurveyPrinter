@@ -17,6 +17,22 @@ abstract class AbstractRenderer implements RendererInterface
     use RendererTranslatorTrait;
     
 	protected RendererResolverInterface $resolver;
+
+    /**
+     * Resolve a JSON element, using this renderers resolver.
+     * 
+     * @param mixed $elementJson
+     * @param array $answerJson
+     * @return string
+     */
+    protected function resolveElement(mixed $elementJson, array $answerJson) : string
+    {
+        if(is_array($elementJson)) {
+            return $this->resolver->findRenderer($elementJson)->render($elementJson, $answerJson);
+        } else {
+            return $this->translateElement($elementJson);
+        }
+    }
     
     /**
      *
