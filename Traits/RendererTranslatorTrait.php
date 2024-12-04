@@ -14,9 +14,9 @@ trait RendererTranslatorTrait
      * Otherwise, it returns the element as is.
      *
      * @param mixed $element
-     * @return string|array|null
+     * @return mixed
      */
-    protected function translateElement(mixed $element) : string|array|null
+    protected function translateElement(mixed $element) : mixed
     {
         if (!is_array($element)) {
             return $element;
