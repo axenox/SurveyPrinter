@@ -1,7 +1,6 @@
 <?php
 namespace axenox\SurveyPrinter\Common\HtmlRenderers;
 
-use axenox\SurveyPrinter\Interfaces\RendererInterface;
 use exface\Core\DataTypes\DateDataType;
 use exface\Core\DataTypes\DateTimeDataType;
 
@@ -81,7 +80,7 @@ use exface\Core\DataTypes\DateTimeDataType;
  *		}
  *	},
  * ]´
- * (!) Columns and rows of matrices without choices show columns with ´value´ and ´text´ while matrix with ´choices´ show ONLY IN COLUMNS the schema of ´name´ and ´title´ (this sould be reported to SurveyJs)
+ * (!) Columns and rows of matrices without choices show columns with ´value´ and ´text´ while matrix with ´choices´ show ONLY IN COLUMNS the schema of ´name´ and ´title´ (this should be reported to SurveyJs)
  *
  * @author miriam.seitz
  */
@@ -102,10 +101,16 @@ class MatrixRenderer extends AbstractRenderer
     			$tableHeader .= '<th>' . $column . '</th>';
     		} else {
     			// this is ugly because SurveyJs made something foolish (see last summary entry)
-	    		$tableHeader .= '<th>' . ($column['text'] ?? $column['value'] ?? $column['title'] ?? $column['name']) . '</th>';
+                $value = $this->translateElement($column['text'] ?? $column['value'] ?? $column['title'] ?? $column['name']);
+	    		$tableHeader .= '<th>' . $value . '</th>';
     		}
     	}
-
+        
+        if(empty($jsonPart['rows']) || empty($answerJson[$jsonPart['name']])) {
+            return '';
+        }
+        
+        $hasContent = false;
     	foreach ($jsonPart['rows'] as $row){
     		$tableContent .= '<tr>';
 
@@ -114,22 +119,29 @@ class MatrixRenderer extends AbstractRenderer
     			$rowName = $row;
     			$tableContent .= '<td class=' . $rowEntryTitleCssClass .'>' . $row . '</td>';
     		} else {
-    			$rowName = $row['value'];
-    			$tableContent .= '<td class=' . $rowEntryTitleCssClass .'>'. ($row['text'] ?? $row['value']) . '</td>';
+    			$rowName = $this->translateElement($row['value']);
+                $value = $this->translateElement($row['text'] ?? $row['value']);
+    			$tableContent .= '<td class=' . $rowEntryTitleCssClass .'>'. $value . '</td>';
     		}
 
     		$answer = $answerJson[$jsonPart['name']][$rowName];
+            if(empty($answer)) {
+                continue;
+            }
+            $hasContent = true;
+            
     		foreach ($jsonPart['columns'] as $column) {
-    			if (array_key_exists('choices', $jsonPart)) {
-    				$columnName = is_string($column) ? $column : $column['name'];
+                $columnName = is_string($column) ? $column : $column['name'];
+                if (array_key_exists('choices', $jsonPart)) {
                     $output = $this->matchChoiceWithAnswer($jsonPart['choices'], $answer, $columnName);
+                    $output = $this->translateElement($output);
     				$tableContent .= '<td>' . $this->handleCellTypes($output) . '</td>';
 	    		} else {
-	    			$columnName = is_string($column) ? $column : $column['name'];
                     if(is_string($answer)) {
 	    			    $tableContent .= '<td>' . ($answer === $columnName ? 'X' : '') . '</td>';
                     } else {
-                        $tableContent .= '<td>' . $this->handleCellTypes($answer[$columnName]). '</td>';
+                        $value = $this->translateElement($answer[$columnName]);
+                        $tableContent .= '<td>' . $this->handleCellTypes($value). '</td>';
                     }
 	    		}
     		}
@@ -137,7 +149,7 @@ class MatrixRenderer extends AbstractRenderer
     		$tableContent .= '</tr>';
     	}
 
-    	if ($tableContent === ''){
+    	if (!$hasContent){
     		return '';
     	}
 
@@ -161,7 +173,7 @@ HTML;
      * Checks whether a string matches a certain cell type (i.e. a date or date-time) and
      * formats it accordingly.
      *
-     * @param string $input
+     * @param string|null $input
      * @return string
      */
     private function handleCellTypes(?string $input) : string
@@ -185,14 +197,15 @@ HTML;
      * Evaluates the choice either
      * with text
      *  {
-     * 		"value": "item1",
-     * 		"text": "A"
+     *        "value": "item1",
+     *        "text": "A"
      *  }
      * or without:
      * value: "item1"
      *
-     * @param array $choices
-     * @param mixed $answer can be either an array, a string or null
+     * @param array  $choices
+     * @param mixed  $answer can be either an array, a string or null
+     * @param string $columnName
      * @return string|NULL
      */
     protected function matchChoiceWithAnswer(array $choices, mixed $answer, string $columnName) : ?string

@@ -6,9 +6,9 @@ class MultipleTextRenderer extends AbstractRenderer
     /**
  	 * The MultipleTextRenderer is a strict renderer for the multiple text element of SurveyJs.
 	 * The SurveyJs has to have an array ´items´ that contains only the ´name´ of the question.
-	 * This means only the TextRenderer can be used for it's child elements.
+	 * This means only the TextRenderer can be used for its child elements.
 	 * 
-	 * The awnser json will be contributed to all inner text elements and looks like this:
+	 * The answer json will be contributed to all inner text elements and looks like this:
  	 * "multiTextName": {
 	 *	 "textName1": "Test2",
 	 *	 "textName2": "Test2"
@@ -17,32 +17,33 @@ class MultipleTextRenderer extends AbstractRenderer
      * {@inheritDoc}
      * @see \axenox\SurveyPrinter\Interfaces\RendererInterface::render()
      */
-	public function render(array $jsonPart, array $awnserJson) : string
+	public function render(array $jsonPart, array $answerJson) : string
     {        
-    	$renderedElements =$this->renderElements($jsonPart, $awnserJson[$jsonPart['name']]);
+    	$renderedElements = $this->renderElements($jsonPart, $answerJson[$jsonPart['name']]);
     	if ($renderedElements === ''){
     		return '';
     	}
     	
         return <<<HTML
-    <label class='form-panelTitle'>{$jsonPart['title']}</label>
+    <label class='form-panelTitle'>{$this->translateElement($jsonPart['title'])}</label>
 	<div class='form-items'>
 		{$renderedElements}
 	</div>
 HTML;
     }
 
-    
+
     /**
      *
      * @param array $jsonPart
+     * @param array $answerJson
      * @return string
      */
-    public function renderElements(array $jsonPart, array $awnserJson) : string
+    public function renderElements(array $jsonPart, array $answerJson) : string
     {
     	$html = '';
     	foreach ($jsonPart['items'] as $el) {
-    		$html .= (new TextRenderer($this->resolver))->render($el, $awnserJson);
+    		$html .= (new TextRenderer())->render($el, $answerJson);
     	}
     	
     	return $html;

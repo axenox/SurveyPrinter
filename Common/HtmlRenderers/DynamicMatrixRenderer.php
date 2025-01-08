@@ -1,8 +1,6 @@
 <?php
 namespace axenox\SurveyPrinter\Common\HtmlRenderers;
 
-use axenox\SurveyPrinter\Interfaces\RendererInterface;
-
 /**
  * This renderer is a strict renderer for panels of a SurveyJs.
  * The SurveyJs has to have an array ´columns´ that contains all related elements in a very specific way:
@@ -47,22 +45,22 @@ use axenox\SurveyPrinter\Interfaces\RendererInterface;
  *		"columnName1": "text"
  *	},
  * ]
- * (!) The cellType does not matter since the awnserJson will always have the value of the cell by name.
- * (!) The columnNames in the dynamic matrix will be equal with mutliple rows but seperate objects in the array.
+ * (!) The cellType does not matter since the answerJson will always have the value of the cell by name.
+ * (!) The columnNames in the dynamic matrix will be equal with multiple rows but separate objects in the array.
  *
  * @author miriam.seitz
  */
 class DynamicMatrixRenderer extends  AbstractRenderer
 {
-    private $columnsWithSpecifiedFormat = [];
+    private array $columnsWithSpecifiedFormat = [];
 
-	public function render(array $jsonPart, array $awnserJson) : string
+	public function render(array $jsonPart, array $answerJson) : string
 	{
         $tableHeader = '';
         $rowValues = [];
 		$attributes = $this->renderAttributesToRender($jsonPart);
 
-    	foreach ($awnserJson[$jsonPart['name']] as $row){
+    	foreach ($answerJson[$jsonPart['name']] as $row){
             $rowValues[] = $this->readEntireRow($jsonPart['columns'], $row);
     	}
 
@@ -97,12 +95,12 @@ class DynamicMatrixRenderer extends  AbstractRenderer
 HTML;
     }
 
-    protected function readEntireRow(array $jsonPart, array $awnserJson): array
+    protected function readEntireRow(array $jsonPart, array $answerJson): array
     {
         $rowValues = [];
     	foreach ($jsonPart as $column){
             $columnName = $column['title'] ?? $column['name'];
-            $value = $awnserJson[$column['name']];
+            $value = $answerJson[$column['name']];
 
             if (is_bool($value)) {
                 $translator = $this->resolver->getTranslator();
@@ -119,13 +117,15 @@ HTML;
         return $rowValues;
     }
 
-    protected function printRows(array $rows)
+    protected function printRows(array $rows) : string
     {
         $tableContent = '';
         foreach ($rows as $rowContent => $rowValues){
             $row = '<tr>';
             $extraRow = null;
             foreach($rowValues as $column => $rowValue){
+                $rowValue = $this->translateElement($rowValue);
+                
                 if ($this->columnsWithSpecifiedFormat[$column] === 'row') {
                     $extraRow = '<td>' . $column . '</td>'
                         . '<td style="text-align:left" colspan="'. count($rowValues)-1 .'">' . $rowValue . '</td>';
@@ -137,7 +137,7 @@ HTML;
             $tableContent .= $row;
 
             if ($extraRow !== null) {
-                $tableContent .= '<tr>' . $extraRow . '</tr>';
+                $tableContent .= '<tr>' . $this->translateElement($extraRow) . '</tr>';
             }
         }
 

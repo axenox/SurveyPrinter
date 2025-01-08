@@ -5,7 +5,7 @@ class PageRenderer extends AbstractRenderer
 {	
 	/**
 	 * The PageRenderer is a strict renderer for pages of a SurveyJs.
-	 * The SurveyJs has to have an array ´pages´ and these have to to have ojects with ´elements´ that contains all related elements.
+	 * The SurveyJs has to have an array ´pages´ and these have to have objects with ´elements´ that contains all related elements.
 	 * SurveyJs for all pages:
 	 * "title": "Form", // optional
 	 * "pages": [ .. ]
@@ -15,12 +15,12 @@ class PageRenderer extends AbstractRenderer
 	 * "title": "Page" // optional 
 	 * "elements": [ ... ]
 	 * 
-	 * The awnser json will be contributed to all inner elements.
+	 * The answer json will be contributed to all inner elements.
 	 * 
 	 * {@inheritDoc}
 	 * @see \axenox\SurveyPrinter\Interfaces\RendererInterface::render()
 	 */
-    public function render(array $jsonPart, array $awnserJson): string
+    public function render(array $jsonPart, array $answerJson): string
     {    	
     	switch(true)
     	{
@@ -32,6 +32,9 @@ class PageRenderer extends AbstractRenderer
     			$cssClass = 'form-page';
     			$elements = $jsonPart['elements'];
     			break;
+            default:
+                $cssClass = '';
+                $elements = [];
     	}
     	
     	$attributes = $this->renderAttributesToRender($jsonPart);
@@ -39,38 +42,30 @@ class PageRenderer extends AbstractRenderer
         	
 	<div class='{$cssClass}'>
 		{$attributes}
-		{$this->renderElements($elements, $awnserJson)}
+		{$this->renderElements($elements, $answerJson)}
 		{$this->createFooter($jsonPart)}
 	</div>
 HTML;
     }
 
     /**
-     * 
-     * @param array $jsonPart
+     *
+     * @param array $elements
+     * @param array $answerJson
      * @return string
      */
-    public function renderElements(array $elements, array $awnserJson) : string
+    public function renderElements(array $elements, array $answerJson) : string
     {        
     	$html = '';
         
         //elements should be on the next level
         $this->resolver->increaseLevel();
         foreach ($elements as $el) {
-        	// element is an array
-        	if (is_numeric($el)) {
-        		foreach ($el as $jsonElement) {
-        			$htmlElement = $this->resolver->findRenderer($jsonElement)->render($jsonElement, $awnserJson);
-        			$html .= $htmlElement;
-        		}
-        		continue;
-        	}
         	// skip expressions in export
         	if (array_key_exists('type', $el) && $el['type'] === 'expression') {
         		continue;
         	} else {
-        		$htmlElement = $this->resolver->findRenderer($el)->render($el, $awnserJson);
-        		$html .= $htmlElement;
+        		$html .= $this->resolveElement($el, $answerJson);
         	}
         }
         $this->resolver->decreaseLevel();
