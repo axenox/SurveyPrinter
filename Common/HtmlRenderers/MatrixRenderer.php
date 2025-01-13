@@ -105,7 +105,12 @@ class MatrixRenderer extends AbstractRenderer
 	    		$tableHeader .= '<th>' . $value . '</th>';
     		}
     	}
-
+        
+        if(empty($jsonPart['rows']) || empty($answerJson[$jsonPart['name']])) {
+            return '';
+        }
+        
+        $hasContent = false;
     	foreach ($jsonPart['rows'] as $row){
     		$tableContent .= '<tr>';
 
@@ -120,6 +125,11 @@ class MatrixRenderer extends AbstractRenderer
     		}
 
     		$answer = $answerJson[$jsonPart['name']][$rowName];
+            if(empty($answer)) {
+                continue;
+            }
+            $hasContent = true;
+            
     		foreach ($jsonPart['columns'] as $column) {
                 $columnName = is_string($column) ? $column : $column['name'];
                 if (array_key_exists('choices', $jsonPart)) {
@@ -139,7 +149,7 @@ class MatrixRenderer extends AbstractRenderer
     		$tableContent .= '</tr>';
     	}
 
-    	if ($tableContent === ''){
+    	if (!$hasContent){
     		return '';
     	}
 

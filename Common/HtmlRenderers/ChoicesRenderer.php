@@ -99,7 +99,7 @@ class ChoicesRenderer extends QuestionRenderer
     protected function evaluateItemWithMoreInformation(array $choice, mixed $answer) : ?string
     {
     	if ($this->matchAnswer($choice['value'], $answer)){
-    		return $choice['text'];
+    		return $this->translateElement($choice['text']);
     	}
     	
     	return null;
