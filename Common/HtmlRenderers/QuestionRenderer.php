@@ -48,7 +48,7 @@ HTML;
     		
 	<table class='form-question{$additionalCssClass}'>
 		<tr>
-			<td>{$label}</td>
+			<td class="form-question-label">{$label}</td>
 			<td class='form-value'>{$this->translateElement($renderedValues)}</td>
 			{$description}
 		</tr>

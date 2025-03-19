@@ -70,12 +70,7 @@ class ChoicesRenderer extends QuestionRenderer
             default:
                 $values = '';
                 foreach ($choices as $choice){
-                    if (is_array($choice)) {
-                        $value = $this->evaluateItemWithMoreInformation($choice, $answer);
-                    } else {
-                        $value = $this->evaluateItem($choice,$answer);
-                    }
-                    
+                    $value = $this->evaluateItem($choice,$answer);
                     if ($value !== null){
                         $values .= $firstItem ? $value : ', ' . $value;
                         $firstItem = false;
@@ -86,55 +81,31 @@ class ChoicesRenderer extends QuestionRenderer
     }
     
     /**
-     * Evaluates the choice when it contains a value and text as well:
-     *  {
-     * 		"value": "item1",
-     *  	"text": "A"
-     *  }
+     * Evaluate a choice.
      * 
-     * @param array $choice
+     * @param mixed $choice
      * @param mixed $answer can be either an array or a string
      * @return string|NULL
      */
-    protected function evaluateItemWithMoreInformation(array $choice, mixed $answer) : ?string
+    protected function evaluateItem(mixed $choice, mixed $answer) : ?string
     {
-    	if ($this->matchAnswer($choice['value'], $answer)){
-    		return $this->translateElement($choice['text']);
-    	}
-    	
-    	return null;
-    }
-
-    /**
-     * Evaluates a choice when it is only a value: "item1"
-     *
-     * @param string $choice
-     * @param mixed  $answer can be either an array or a string
-     * @return string|NULL
-     */
-    protected function evaluateItem(string $choice, mixed $answer) : ?string 
-    {
-    	if ($this->matchAnswer($choice, $answer)){
-    		return $choice;
-    	}
-    	
+        $value = $text = $choice;
+        if(is_array($choice)) {
+            $value = $choice['value'];
+            $text = $choice['text'];
+        }
+        
+        if($this->matchAnswer($value, $answer)) {
+            return $this->translateElement($text);
+        }
+        
     	return null;
     }
     
     protected function matchAnswer(string $choice, mixed $answer) : bool
     {
-    	return is_array($answer) ? 
-	    	$this->searchValueInMultipleAnswers($choice, $answer) : 
-	    	$this->matchWithAnswer($choice, $answer);
-    }
-    
-    protected function searchValueInMultipleAnswers(string $choice, array $answerArray) : bool
-    {
-    	return in_array($choice, $answerArray);
-    }
-    
-    protected function matchWithAnswer(string $choice, string $answer) : bool
-    {
-    	return $choice === $answer;
+    	return is_array($answer) ?
+            in_array($choice, $answer) :
+            $choice === $answer;
     }
 }

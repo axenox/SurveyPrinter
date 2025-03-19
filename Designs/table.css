@@ -88,10 +88,20 @@ body, div, p, a, table {
 	  white-space: normal;
 	}
 
-.form-value {
+.form-question-label {
   width: 40%;
   vertical-align: middle ;
   white-space: normal;
+  font-weight: bold;
+  color: dimgrey;
+}
+
+.form-value {
+	width: 40%;
+	vertical-align: middle ;
+	white-space: normal;
+	font-weight: bold;
+	color: #1b2329;
 }
 
 .form-description {
