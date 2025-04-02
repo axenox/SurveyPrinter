@@ -70,6 +70,9 @@ class DynamicMatrixRenderer extends  AbstractRenderer
 
         foreach ($jsonPart['columns'] as $column){
             $columnName = $column['title'] ?? $column['name'];
+            if (is_array($columnName)) {
+                $columnName = $this->translateElement($columnName);
+            }
             if (array_key_exists($columnName, $this->columnsWithSpecifiedFormat) && $this->columnsWithSpecifiedFormat[$columnName] === 'row') {
                 continue;
             }
@@ -100,6 +103,9 @@ HTML;
         $rowValues = [];
     	foreach ($jsonPart as $column){
             $columnName = $column['title'] ?? $column['name'];
+            if (is_array($columnName)) {
+                $columnName = $this->translateElement($columnName);
+            }
             $value = $answerJson[$column['name']];
 
             if (is_bool($value)) {
