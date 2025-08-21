@@ -1,6 +1,7 @@
 {
 	"RENDERERS_BY_TYPE": {
 		 "none": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\PageRenderer",	
+		 "comment": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\CommentRenderer",	
 		 "text": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\TextRenderer",	
 		 "boolean": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\BooleanRenderer",	
 		 "dropdown": "\\axenox\\SurveyPrinter\\Common\\HtmlRenderers\\ChoicesRenderer",
