@@ -31,7 +31,7 @@ class DynamicPanelRenderer extends AbstractRenderer
             return '';
         }
         
-    	$renderedElements = $this->renderElements($jsonPart, $answerJson);
+    	$renderedElements = $this->renderElements($jsonPart, $answer);
     	if ($renderedElements === ''){
     		return '';
     	}
