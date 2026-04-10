@@ -25,7 +25,13 @@ class DynamicPanelRenderer extends AbstractRenderer
 	public function render(array $jsonPart, array $answerJson) : string
     {    	
     	$attributes = $this->renderAttributesToRender($jsonPart);
-    	$renderedElements = $this->renderElements($jsonPart, $answerJson[$jsonPart['name']]);
+        
+        $answer = $answerJson[$jsonPart['name']];
+        if($answer === null) {
+            return '';
+        }
+        
+    	$renderedElements = $this->renderElements($jsonPart, $answerJson);
     	if ($renderedElements === ''){
     		return '';
     	}
