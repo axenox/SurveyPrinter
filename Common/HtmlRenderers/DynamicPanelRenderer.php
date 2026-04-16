@@ -25,7 +25,13 @@ class DynamicPanelRenderer extends AbstractRenderer
 	public function render(array $jsonPart, array $answerJson) : string
     {    	
     	$attributes = $this->renderAttributesToRender($jsonPart);
-    	$renderedElements = $this->renderElements($jsonPart, $answerJson[$jsonPart['name']]);
+        
+        $answer = $answerJson[$jsonPart['name']];
+        if($answer === null) {
+            return '';
+        }
+        
+    	$renderedElements = $this->renderElements($jsonPart, $answer);
     	if ($renderedElements === ''){
     		return '';
     	}
@@ -52,7 +58,29 @@ HTML;
     	$this->resolver->increaseLevel();
     	// Multiple panels with answer.
         $html = '';
+        
+        // Prepare dynamic title rendering.
+        $elementIndex = 1;
+        $titleTemplate = $jsonPart['templateTitle'];
+        if($titleTemplate !== null) {
+            // FIXME geb 2026-03-24: We do not distinguish between ALL and VISIBLE panel index, because at this point
+            // FIXME we don't have access to the unfiltered index. 
+            $titleTemplate = $this->translateElement($titleTemplate);
+            $titleTemplate = preg_split('/(?:{panelIndex}|{visiblePanelIndex})/', $titleTemplate);
+        } else {
+            $titleTemplate = false;
+        }
+        
+        $titlePart = ['type' => 'panelDynamic'];
+        
 	    foreach($answerJson as $entry) {
+            if($titleTemplate !== false) {
+                $titlePart['title'] = implode($elementIndex, $titleTemplate);
+                $html .= $this->createHeading($titlePart);
+            }
+            
+            $elementIndex += 1;
+            
 			foreach ($jsonPart['templateElements'] as $element) {
 				// Skip expressions in export
 				if (array_key_exists('type', $element) && $element['type'] === 'expression') {
@@ -65,5 +93,5 @@ HTML;
 	    $this->resolver->decreaseLevel();
 	    
     	return $html;
-    }    
+    }
 }
